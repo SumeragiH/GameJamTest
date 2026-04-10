@@ -94,7 +94,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
 
         // 测试代码 (temporary)
-        plotList[2][2].specialRewards.Add(new TestSpecialReward());
+        plotList[2][2].specialRewards.Add(new TestSpecialReward(plotList[2][2]));
         // plotList[2][2].improvements.Add(new TestImprovement(plotList[2][2]));
 
         Debug.Log("测试: 打印地块产出");
