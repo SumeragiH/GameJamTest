@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 /// <summary>
 /// 专门用于总产出(包括策划点，产出列表)
+/// 名字有些奇怪（）不知道叫啥好
 /// </summary>
 public class TotalProductionData
 {

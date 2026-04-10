@@ -93,6 +93,10 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
     }
 
+    /// <summary>
+    /// 应用特殊事件效果
+    /// </summary>
+    /// <param name="eventView"></param>
     private void OnEventApplied(EventView eventView)
     {
         for (int y = 0; y < rowNum; y++)
@@ -107,6 +111,10 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
     }
 
+    /// <summary>
+    /// 移除特殊事件效果
+    /// </summary>
+    /// <param name="eventView"></param>
     private void OnEventResolved(EventView eventView)
     {
         for (int y = 0; y < rowNum; y++)
