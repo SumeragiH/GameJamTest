@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1804807702387880591}
   - component: {fileID: 3795013343963442552}
   - component: {fileID: 5349115571296489479}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MountainPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

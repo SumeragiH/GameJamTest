@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7622251683700353651}
   - component: {fileID: 2017504231079031326}
   - component: {fileID: 7363115273091248720}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SeaPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
