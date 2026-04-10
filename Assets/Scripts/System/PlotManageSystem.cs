@@ -8,7 +8,15 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
     [SerializeField] private MapPlotConfigData mapPlotConfigData; 
 
-    [SerializeField] private Dictionary<PlotTypeEnum, PlotView> plotPrefab = new Dictionary<PlotTypeEnum, PlotView>();
+    [System.Serializable]
+    public class PlotTypeToPrefab
+    {
+        public PlotTypeEnum plotType;
+        public PlotView prefab;
+    }
+
+    [SerializeField] private List<PlotTypeToPrefab> plotPrefabs = new List<PlotTypeToPrefab>();
+    private Dictionary<PlotTypeEnum, PlotView> plotPrefabsDict = new Dictionary<PlotTypeEnum, PlotView>();
 
     private int colNum;
     private int rowNum;
@@ -29,6 +37,15 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         colNum = mapPlotConfigData.GetColNum();
         rowNum = mapPlotConfigData.GetRowNum();
 
+        // 将地块类型和预制体的对应关系存入字典，方便后续使用
+        foreach (var item in plotPrefabs)
+        {
+            if (!plotPrefabsDict.ContainsKey(item.plotType))
+            {
+                plotPrefabsDict.Add(item.plotType, item.prefab);
+            }
+        }
+
         // 初始化地块列表
         for (int y = 0; y < rowNum; y++)
         {
@@ -36,9 +53,9 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
             for (int x = 0; x < colNum; x++)
             {
                 PlotTypeEnum plotType = mapPlotConfigData.GetPlot(x, y);
-                if (plotPrefab.ContainsKey(plotType))
+                if (plotPrefabsDict.ContainsKey(plotType))
                 {
-                    PlotView plotInstance = Instantiate(plotPrefab[plotType], new Vector3(x, 0, y), Quaternion.identity);
+                    PlotView plotInstance = Instantiate(plotPrefabsDict[plotType], new Vector3(x, 0, y), Quaternion.identity);
                     plotRow.Add(plotInstance);
                 }
                 else
@@ -47,19 +64,6 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
                 }
             }
             plotList.Add(plotRow);
-        }
-
-        var nearbyPlots = getNearbyPlots(1, 1);
-        foreach (var plot in nearbyPlots)
-        {
-            if (plot != null)
-            {
-                Debug.Log(plot.name);
-            }
-            else
-            {
-                Debug.Log("null");
-            }
         }
     }
 
