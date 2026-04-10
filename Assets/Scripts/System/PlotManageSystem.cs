@@ -85,6 +85,38 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
                 }
             }
         }
+
+        // 订阅事件
+        EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
+        EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
+    }
+
+    private void OnEventApplied(EventView eventView)
+    {
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    plotList[y][x].OnEventApplied(eventView);
+                }
+            }
+        }
+    }
+
+    private void OnEventResolved(EventView eventView)
+    {
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    plotList[y][x].OnEventResolved(eventView);
+                }
+            }
+        }
     }
 
     public PlotView getPlotView(int x, int y)
