@@ -31,6 +31,11 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         (-1, 1),  // 左下
         (-1, 0)   // 左
     };
+    [SerializeField] private Transform plotStartPosition = null; // 地块排布起始位置
+    [SerializeField] private Quaternion plotRotation = Quaternion.identity; // 地块默认旋转
+
+    [SerializeField] private float plotWidth = 1f; // 地块宽度
+    [SerializeField] private float plotHeight = 1f; // 地块高度
 
     void Start()
     {
@@ -64,6 +69,21 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
                 }
             }
             plotList.Add(plotRow);
+        }
+
+        // 排布地块
+        for (int y = 0; y < rowNum; y++)
+        {
+            Vector3 rowStartPos = plotStartPosition.position + new Vector3(0, -y * plotHeight, 0) + new Vector3((y % 2 == 0) ? 0 : plotWidth / 2, 0, 0) + new Vector3(0, 0, -0.01f);
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    Vector3 position = new Vector3(x * plotWidth, 0, 0) + rowStartPos;
+                    plotList[y][x].transform.position = position;
+                    plotList[y][x].transform.rotation = plotRotation;
+                }
+            }
         }
     }
 
