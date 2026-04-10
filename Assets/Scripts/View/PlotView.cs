@@ -59,7 +59,7 @@ public class PlotView : MonoBehaviour
         {
             return;
         }
-
+        isSelected=true;
         colorTween?.Kill();
 
         //获取原始颜色（如果没有存储，就用当前颜色）
@@ -86,6 +86,7 @@ public class PlotView : MonoBehaviour
         {
             return;
         }
+        isSelected=false;
         colorTween?.Kill();
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
