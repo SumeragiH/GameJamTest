@@ -13,6 +13,17 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
     private int colNum;
     private int rowNum;
 
+    // 用于获取周围地块的offset
+    private readonly List<(int, int)> nearbyOffsets = new List<(int, int)>
+    {
+        (-1, -1), // 左上
+        (0, -1),  // 右上
+        (1, 0),   // 右
+        (0, 1),   // 右下
+        (-1, 1),  // 左下
+        (-1, 0)   // 左
+    };
+
     void Start()
     {
         colNum = mapPlotConfigData.GetColNum();
@@ -37,5 +48,55 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
             }
             plotList.Add(plotRow);
         }
+
+        var nearbyPlots = getNearbyPlots(1, 1);
+        foreach (var plot in nearbyPlots)
+        {
+            if (plot != null)
+            {
+                Debug.Log(plot.name);
+            }
+            else
+            {
+                Debug.Log("null");
+            }
+        }
+    }
+
+    public PlotView getPlotView(int x, int y)
+    {
+        if (y >= plotList.Count || x >= plotList[y].Count)
+            return null;
+        return plotList[y][x];
+    }
+
+    /// <summary>
+    /// 获取一个地块的周围地块 (六个方向)
+    /// </summary>
+    /// <param name="x">地块的横坐标，从0开始计数</param>
+    /// <param name="y">地块的纵坐标，从0开始计数</param>
+    /// <returns>返回周围地块的列表，长度一定为6，依次返回左上，右上，右，右下，左下，左的地块。不存在的地块返回null</returns>
+    public List<PlotView> getNearbyPlots(int x, int y)
+    {
+        List<PlotView> nearbyPlots = new List<PlotView>();
+        foreach (var offset in nearbyOffsets)
+        {
+            int newX = x + offset.Item1;
+            int newY = y + offset.Item2;
+            if (isInMap(newX, newY))
+            {
+                nearbyPlots.Add(getPlotView(newX, newY));
+            }
+            else
+            {
+                nearbyPlots.Add(null);
+            }
+        }
+        return nearbyPlots;
+    }
+
+    private bool isInMap(int x, int y)
+    {
+        return x >= 0 && x < colNum && y >= 0 && y < rowNum;
     }
 }
