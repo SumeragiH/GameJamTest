@@ -91,6 +91,32 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         // 订阅事件
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
+
+
+        // 测试代码 (temporary)
+        plotList[2][2].specialRewards.Add(new TestSpecialReward());
+        // plotList[2][2].improvements.Add(new TestImprovement(plotList[2][2]));
+
+        Debug.Log("测试: 打印地块产出");
+        TotalProductionData totalProduction = PlotsProduct();
+        Debug.Log(totalProduction.ToString());
+    }
+
+    public TotalProductionData PlotsProduct()
+    {
+        TotalProductionData totalProduction = new TotalProductionData(0, new List<ProductionData>());
+
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    totalProduction += plotList[y][x].PlotProduct();
+                }
+            }
+        }
+        return totalProduction;
     }
 
     /// <summary>

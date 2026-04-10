@@ -8,4 +8,9 @@ public abstract class ImprovementView : MonoBehaviour
 {
     protected PlotView currentPlot; // 所在地块
     public abstract TotalProductionData ImprovementProduct();
+
+    public ImprovementView(PlotView plotView)
+    {
+        currentPlot = plotView;
+    }
 }

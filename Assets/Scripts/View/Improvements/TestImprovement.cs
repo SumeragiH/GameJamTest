@@ -18,4 +18,8 @@ public class TestImprovement : ImprovementView
         TotalProductionData data = new TotalProductionData(grassLandCount, new List<ProductionData> { new ProductionData(grainProductData, grassLandCount * 2) });
         return data;
     }
+
+    public TestImprovement(PlotView plotView) : base(plotView)
+    {
+    }
 }

@@ -14,4 +14,9 @@ public class ProductionData
         this.product = product;
         this.amount = amount;
     }
+
+    public override string ToString()
+    {
+        return $"[{product?.name ?? "null"}: {amount}]";
+    }
 }

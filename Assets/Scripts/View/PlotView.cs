@@ -31,6 +31,33 @@ public class PlotView : MonoBehaviour
         EventCenter.Instance.AddListener<GameObject>("鼠标悬停离开地块", UnHighLightPlot);
     }
 
+    /// <summary>
+    /// 计算产出的核心方法类
+    /// </summary>
+    public TotalProductionData PlotProduct()
+    {
+        TotalProductionData totalProduction = new TotalProductionData(0, new List<ProductionData>());
+
+        // 加上地块的基础产出
+        foreach (var production in productions)
+        {
+            totalProduction += new TotalProductionData(0, new List<ProductionData> { production });
+        }
+
+        // 加上改良的额外产出
+        foreach (var improvement in improvements)
+        {
+            totalProduction += improvement.ImprovementProduct();
+        }
+
+        // 加上特殊奖励的额外产出
+        foreach (var specialReward in specialRewards)
+        {
+            totalProduction += specialReward.ImprovementProduct();
+        }
+        return totalProduction;
+    }
+
     public void OnEventApplied(EventView eventView)
     {
         // 处理事件触发逻辑

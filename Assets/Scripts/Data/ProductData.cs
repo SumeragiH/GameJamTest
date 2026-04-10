@@ -9,5 +9,10 @@ public class ProductData : ScriptableObject
 {
     public string productName; // 产出名称
     public Sprite productIcon; // 产出图标
+
+    public override string ToString()
+    {
+        return productName;
+    }
 }
 
