@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2203403233403542651}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.86602545, w: 0.49999994}
-  m_LocalPosition: {x: 0, y: -1.3500001, z: -0.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79,7 +79,7 @@ Transform:
   m_GameObject: {fileID: 5138613506336672154}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.5, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: -1.3500001, z: -0.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 7807905044028554350}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.3500001, z: -0.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,3 +263,8 @@ MonoBehaviour:
   <grainOutput>k__BackingField: 1
   <productivityOutput>k__BackingField: 1
   <plotType>k__BackingField: 2
+  monsters: []
+  specialRewards: []
+  greenHighlightColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightAlpha: 0.3
+  ChangeDuration: 0.2
