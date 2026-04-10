@@ -31,42 +31,38 @@ public class CameraClick : MonoBehaviour
         Ray rayClick = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        //射线检测
-        if (Physics.Raycast(rayClick, out hit, 1000f))
+        //射线检测并判断点击的是不是地块层
+        if (Physics.Raycast(rayClick, out hit, 1000f) && hit.collider.gameObject.layer == plotLayer)
         {
-            // 判断点击的是不是地块层
-            if (hit.collider.gameObject.layer == plotLayer)
+            GameObject currentPlot = hit.collider.transform.parent.gameObject;
+
+            //如果悬停到新的地块，触发事件
+            if (currentPlot != lastPlot)
             {
-                GameObject currentPlot = hit.collider.transform.parent.gameObject;
-
-                //如果悬停到新的地块，触发事件
-                if (currentPlot != lastPlot)
+                // 离开旧地块
+                if (lastPlot != null)
                 {
-                    // 离开旧地块
-                    if (lastPlot != null)
-                    {
-                        //Debug.Log("鼠标离开地块：" + lastPlot.name);
-                        EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停离开地块", lastPlot);
-                    }
-
-                    // 进入新地块
-                    //Debug.Log("鼠标进入地块：" + currentPlot.name);
-                    lastPlot = currentPlot;
-                    EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停进入地块", currentPlot);
+                    //Debug.Log("鼠标离开地块：" + lastPlot.name);
+                    EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停离开地块", lastPlot);
                 }
 
-                // 点击事件
-                if (Input.GetMouseButtonDown(0))
-                {
-                    //Debug.Log("左键点击地块：" + currentPlot.name);
-                    EventCenter.Instance.EventTrigger<GameObject>("左键点击地块", currentPlot);
-                }
+                // 进入新地块
+                //Debug.Log("鼠标进入地块：" + currentPlot.name);
+                lastPlot = currentPlot;
+                EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停进入地块", currentPlot);
+            }
 
-                if (Input.GetMouseButtonDown(1))
-                {
-                    //Debug.Log("右键点击地块：" + currentPlot.name);
-                    EventCenter.Instance.EventTrigger<GameObject>("右键点击地块", currentPlot);
-                }
+            // 点击事件
+            if (Input.GetMouseButtonDown(0))
+            {
+                //Debug.Log("左键点击地块：" + currentPlot.name);
+                EventCenter.Instance.EventTrigger<GameObject>("左键点击地块", currentPlot);
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                //Debug.Log("右键点击地块：" + currentPlot.name);
+                EventCenter.Instance.EventTrigger<GameObject>("右键点击地块", currentPlot);
             }
         }
         else
@@ -74,7 +70,7 @@ public class CameraClick : MonoBehaviour
             // 关键：鼠标没有悬停在任何地块上，触发离开事件
             if (lastPlot != null)
             {
-                //Debug.Log("鼠标离开所有地块");
+                // Debug.Log("鼠标离开所有地块");
                 EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停离开地块", lastPlot);
                 lastPlot = null;
             }
