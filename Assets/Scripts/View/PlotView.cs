@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlotView : MonoBehaviour
 {
@@ -25,13 +26,13 @@ public class PlotView : MonoBehaviour
     {
     }
 
-    void OnEventTriggered(EventView eventView)
+    public void OnEventApplied(EventView eventView)
     {
         // 处理事件触发逻辑
         eventView.ApplyEvent(this);
     }
 
-    void OnEventResolved(EventView eventView)
+    public void OnEventResolved(EventView eventView)
     {
         // 处理事件解决逻辑
         eventView.ResolveEvent(this);

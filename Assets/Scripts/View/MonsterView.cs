@@ -12,7 +12,7 @@ public class MonsterView : MonoBehaviour
 
     public void Die()
     {
-        EventCenter.Instance.TriggerEvent("怪物死亡", this); // TODO: Event
+        EventCenter.Instance.EventTrigger("怪物死亡", this); // TODO: Event
         Destroy(gameObject);
     }
 
