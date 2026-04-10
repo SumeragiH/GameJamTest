@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7470251629825183336}
   - component: {fileID: 7455447948172509219}
   - component: {fileID: 4215294420451279576}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ForestPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

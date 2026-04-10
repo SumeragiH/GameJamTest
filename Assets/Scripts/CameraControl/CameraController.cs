@@ -44,7 +44,7 @@ public class CameraController : MonoBehaviour
 
     private void MoveVertical(float vertical)
     {
-        mainCamera.transform.Translate(Vector3.forward * vertical * moveSpeed * Time.deltaTime, Space.World);
+        mainCamera.transform.Translate(Vector3.up * vertical * moveSpeed * Time.deltaTime, Space.World);
     }
 
     private void MoveHorizontal(float horizontal)
