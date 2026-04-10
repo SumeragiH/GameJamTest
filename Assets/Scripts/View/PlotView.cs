@@ -4,17 +4,19 @@ using System.Collections.Generic;
 public class PlotView : MonoBehaviour
 {
     // 产出
-    [field: SerializeField]public int grainOutput {get; private set;} = 0; // 粮食
-    [field: SerializeField]public int productivityOutput {get; private set;} = 0; // 生产力
+    [field: SerializeField]public List<ProductionData> productions {get; private set;} = new(); // 地块产出列表
 
     // 地块状态
     public bool isDetected {get; private set;} = false; // 是否被探明 
 
     public bool isSelected {get; private set;} = false; // 是否被选中
+
+    public int x = -1; // 地块横坐标，从0开始计数
+    public int y = -1; // 地块纵坐标，从0开始计数
     [field: SerializeField] public PlotTypeEnum plotType {get; private set;} = PlotTypeEnum.None; // 地块类型
 
     // 改良
-    public List<ImprovementView> improvements {get; private set;} = new(); // 已经建造的改良
+    public List<ImprovementView> improvements = new(); // 已经建造的改良
 
     // 怪物
     public List<MonsterView> monsters = new(); // 地块怪物
