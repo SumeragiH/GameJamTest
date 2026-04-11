@@ -9,11 +9,18 @@ public abstract class ImprovementView : MonoBehaviour
 {
     protected PlotView currentPlot; // 所在地块
     public abstract TotalProductionData ImprovementProduct();
+    [SerializeField] protected string improvementName; 
+    [SerializeField] protected string description;
 
     [SerializeField] protected List<PlotTypeEnum> canBuildOn = new(); // 可建造的地块类型列表
 
-    public ImprovementView(PlotView plotView)
+    public void SetImprovementView(PlotView plotView)
     {
         currentPlot = plotView;
+    }
+
+    public bool CanBuildOn(PlotView plotView)
+    {
+        return canBuildOn.Contains(plotView.plotType);
     }
 }

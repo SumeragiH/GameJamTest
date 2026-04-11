@@ -10,7 +10,7 @@ public abstract class SpecialRewardView : MonoBehaviour
     protected PlotView currentPlot; // 所在地块
     public abstract TotalProductionData ImprovementProduct();
 
-    public SpecialRewardView(PlotView plotView)
+    public void SetSpecialRewardView(PlotView plotView)
     {
         currentPlot = plotView;
     }
