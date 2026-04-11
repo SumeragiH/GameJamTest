@@ -32,7 +32,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         (-1, 0)   // 左
     };
     [SerializeField] private Transform plotStartPosition = null; // 地块排布起始位置
-    [SerializeField] private Quaternion plotRotation = Quaternion.identity; // 地块默认旋转
+    [SerializeField] private Quaternion plotRotation = Quaternion.Euler(0f,0f,0f); // 地块默认旋转
 
     [SerializeField] private float plotWidth = 1f; // 地块宽度
     [SerializeField] private float plotHeight = 1f; // 地块高度
