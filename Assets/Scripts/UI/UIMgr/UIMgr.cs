@@ -31,7 +31,14 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
         {
             canvas = FindObjectOfType<Canvas>();
         }
-        EventCenter.Instance.AddListener<GameObject>("鼠标连续悬停", ShowPlotDescPanel);
+        EventCenter.Instance.AddListener<GameObject>("鼠标悬停", OnHoverChanged);
+        EventCenter.Instance.AddListener<GameObject, Vector3>("鼠标连续悬停", ShowPlotDescPanel);
+    }
+
+    private void OnDestroy()
+    {
+        EventCenter.Instance.RemoveListener<GameObject>("鼠标悬停", OnHoverChanged);
+        EventCenter.Instance.RemoveListener<GameObject, Vector3>("鼠标连续悬停", ShowPlotDescPanel);
     }
 
     /// <summary>
@@ -92,10 +99,11 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
 
 #region 具体Panel显示的函数
 
-    public void ShowPlotDescPanel(GameObject gameObject)
+    public void ShowPlotDescPanel(GameObject gameObject, Vector3 mousePos)
     {
         if (gameObject == null || gameObject.GetComponent<PlotView>() == null)
         {
+            HidePanel<PlotDescPanel>();
             return;
         }
         PlotView plotView = gameObject.GetComponent<PlotView>();
@@ -104,7 +112,15 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
         {
             return;
         }
-        panel.SetPlotDesc(plotView);
+        panel.SetPlotDesc(plotView, mousePos);
+    }
+
+    private void OnHoverChanged(GameObject gameObject)
+    {
+        if (gameObject == null || gameObject.GetComponent<PlotView>() == null)
+        {
+            HidePanel<PlotDescPanel>();
+        }
     }
 
 #endregion

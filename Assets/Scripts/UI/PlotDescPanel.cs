@@ -6,17 +6,19 @@ using UnityEngine;
 public class PlotDescPanel : BasePanel
 {
     [SerializeField] private UIDocument uiDocument;
+    private VisualElement plotPanelRoot;
     private Label plotUpDescText;
     private Label plotDownDescText;
 
     override protected void Awake()
     {
         base.Awake();
+        plotPanelRoot = uiDocument.rootVisualElement.Q<VisualElement>("PlotPanel");
         plotUpDescText = uiDocument.rootVisualElement.Q<Label>("UpText");
         plotDownDescText = uiDocument.rootVisualElement.Q<Label>("DownText");
     }
 
-    public void SetPlotDesc(PlotView plot)
+    public void SetPlotDesc(PlotView plot, Vector3 mousePos)
     {
         // 包括地图块类型，改良建筑，怪物，宝箱，特殊奖励
         string upDescText = "";
@@ -56,5 +58,24 @@ public class PlotDescPanel : BasePanel
 
         plotUpDescText.text = upDescText;
         plotDownDescText.text = downDescText;
+        UpdatePosition(mousePos);
+    }
+
+    private void UpdatePosition(Vector3 mousePos)
+    {
+        if (plotPanelRoot == null || uiDocument == null || uiDocument.rootVisualElement == null || uiDocument.rootVisualElement.panel == null)
+        {
+            return;
+        }
+
+        const float offsetX = 2f;
+        const float offsetY = 2f;
+
+        Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(uiDocument.rootVisualElement.panel, mousePos);
+        float left = panelPos.x + offsetX;
+        float bottom = panelPos.y + offsetY;
+
+        plotPanelRoot.style.left = left;
+        plotPanelRoot.style.bottom = bottom;
     }
 }

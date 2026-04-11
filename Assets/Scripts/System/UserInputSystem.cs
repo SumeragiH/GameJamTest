@@ -17,8 +17,6 @@ public class UserInputSystem : MonoBehaviour
 
     // 指针悬停在同一物体上的时间
     private float hoveringTime = 0;
-    // 是否已经在同一GameObject上触发过连续悬停事件
-    private bool hasTriggeredContinuousHoverEvent = false;
     private readonly float continuousHoverThreshold = 1f; // 连续悬停事件触发的时间阈值（秒）
 
     // 推荐：提前缓存射线层
@@ -45,7 +43,6 @@ public class UserInputSystem : MonoBehaviour
             if (hit.collider.transform.parent.gameObject != currentGameObject)
             {
                 hoveringTime = 0;
-                hasTriggeredContinuousHoverEvent = false;
             }
             else
             {
@@ -60,10 +57,9 @@ public class UserInputSystem : MonoBehaviour
         //如果currentGameObject为空，就执行离开的事件
         EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停", currentGameObject);
 
-        if (!hasTriggeredContinuousHoverEvent && hoveringTime >= continuousHoverThreshold)
+        if (hoveringTime >= continuousHoverThreshold)
         {
-            hasTriggeredContinuousHoverEvent = true;
-            EventCenter.Instance.EventTrigger<GameObject>("鼠标连续悬停", currentGameObject);
+            EventCenter.Instance.EventTrigger<GameObject, Vector3>("鼠标连续悬停", currentGameObject, Input.mousePosition);
         }
 
         if (Input.GetMouseButtonDown(0))
