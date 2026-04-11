@@ -9,7 +9,7 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
     //UI字典
     private Dictionary<string, BasePanel> panelDic = new Dictionary<string, BasePanel>();
 
-    private Canvas canvas;//获取UI组件父对象，这样在实例化面板对象时就可以将它设置为这个父对象的子对象，就可以在场景中看到这个面板了
+    [SerializeField] private Canvas canvas;//获取UI组件父对象，这样在实例化面板对象时就可以将它设置为这个父对象的子对象，就可以在场景中看到这个面板了
 
     //获取面板的方法，供外部调用
     public T GetPanel<T>() where T : BasePanel
@@ -27,7 +27,11 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
 
     private void Start()
     {
-        EventCenter.Instance.AddListener<GameObject>("鼠标持续悬停", ShowPlotDescPanel);
+        if (canvas == null)
+        {
+            canvas = FindObjectOfType<Canvas>();
+        }
+        EventCenter.Instance.AddListener<GameObject>("鼠标连续悬停", ShowPlotDescPanel);
     }
 
     /// <summary>
@@ -46,7 +50,7 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
         }
         else//如果字典中没有这个面板，就创建一个新的面板，并添加到字典中
         {
-            GameObject panelPrefab = Resources.Load<GameObject>("UI/" + panelName);//从资源文件夹中加载面板预制体
+            GameObject panelPrefab = Resources.Load<GameObject>("Prefabs/UI/" + panelName);//从资源文件夹中加载面板预制体
             if (panelPrefab == null)
             {
                 Debug.LogError("没有找到" + panelName + "预制体，请检查资源文件夹中的UI目录下是否有这个预制体");
@@ -95,7 +99,11 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
             return;
         }
         PlotView plotView = gameObject.GetComponent<PlotView>();
-        PlotDesc panel = ShowPanel<PlotDesc>();
+        PlotDescPanel panel = ShowPanel<PlotDescPanel>();
+        if (panel == null)
+        {
+            return;
+        }
         panel.SetPlotDesc(plotView);
     }
 

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine.UIElements;
 using UnityEngine;
 
-public class PlotDesc : BasePanel
+public class PlotDescPanel : BasePanel
 {
     [SerializeField] private UIDocument uiDocument;
     private Label plotUpDescText;
     private Label plotDownDescText;
 
-    void Start()
+    override protected void Awake()
     {
+        base.Awake();
         plotUpDescText = uiDocument.rootVisualElement.Q<Label>("UpText");
         plotDownDescText = uiDocument.rootVisualElement.Q<Label>("DownText");
     }
@@ -52,6 +53,7 @@ public class PlotDesc : BasePanel
         {
             downDescText += $"\n{playerData.playerName} 在这个单元格上\n";
         }
+
         plotUpDescText.text = upDescText;
         plotDownDescText.text = downDescText;
     }

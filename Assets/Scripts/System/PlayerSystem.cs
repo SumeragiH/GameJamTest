@@ -75,7 +75,6 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
                 }
             }
         }
-        Debug.LogError($"未找到位置为 ({x}, {y}) 的玩家！");
         return null;
     }
 }

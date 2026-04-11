@@ -62,8 +62,8 @@ public class UserInputSystem : MonoBehaviour
 
         if (!hasTriggeredContinuousHoverEvent && hoveringTime >= continuousHoverThreshold)
         {
-            EventCenter.Instance.EventTrigger<GameObject>("鼠标连续悬停", currentGameObject);
             hasTriggeredContinuousHoverEvent = true;
+            EventCenter.Instance.EventTrigger<GameObject>("鼠标连续悬停", currentGameObject);
         }
 
         if (Input.GetMouseButtonDown(0))
