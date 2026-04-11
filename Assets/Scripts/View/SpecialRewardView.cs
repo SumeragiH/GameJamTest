@@ -8,6 +8,8 @@ using System.Collections.Generic;
 public abstract class SpecialRewardView : MonoBehaviour
 {
     protected PlotView currentPlot; // 所在地块
+    [field: SerializeField] public string specialRewardName { get; private set; } = "";
+    [field: SerializeField] public string description { get; private set; } = "";
     public abstract TotalProductionData ImprovementProduct();
 
     public void SetSpecialRewardView(PlotView plotView)

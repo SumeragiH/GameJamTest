@@ -24,14 +24,17 @@ public class PlotView : MonoBehaviour
     // 怪物
     public List<MonsterView> monsters = new(); // 地块怪物
 
+    // 宝箱
+    public TreasureBoxView treasureBox = null; // 地块宝箱
+
     // 特殊奖励
     public List<SpecialRewardView> specialRewards = new(); // 地块特殊奖励
 
     void Start()
     {
         originalColor = GetComponent<SpriteRenderer>().color; // 存储原始颜色
-        EventCenter.Instance.AddListener<GameObject>("鼠标悬停地块", HighLightPlot);
-        EventCenter.Instance.AddListener<GameObject>("左键点击地块", SelectPlot);
+        EventCenter.Instance.AddListener<GameObject>("鼠标悬停", HighLightPlot);
+        EventCenter.Instance.AddListener<GameObject>("左键点击", SelectPlot);
     }
 
     /// <summary>
@@ -87,13 +90,19 @@ public class PlotView : MonoBehaviour
     /// </summary>
     public void HighLightPlot(GameObject plot)
     {
+        // 判断是否为地块
+        if (plot == null || plot.GetComponent<PlotView>() == null)
+        {
+            return;
+        }
+
         // 如果已经被选中，不需要绿色高亮，保持蓝色
         if (isSelected)
         {
             return;
         }
 
-        if (plot != this.gameObject || plot == null)
+        if (plot != this.gameObject)
         {
             RestoreColor(plot);
             return;
@@ -147,7 +156,13 @@ public class PlotView : MonoBehaviour
     /// </summary>
     public void SelectPlot(GameObject plot)
     {
-        if (plot != this.gameObject || plot == null)
+        // 判断是否为地块
+        if (plot == null || plot.GetComponent<PlotView>() == null)
+        {
+            return;
+        }
+
+        if (plot != this.gameObject)
         {
             isSelected = false;
             RestoreColor(plot);

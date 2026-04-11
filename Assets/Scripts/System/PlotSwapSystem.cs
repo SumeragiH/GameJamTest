@@ -20,14 +20,14 @@ public class PlotSwapSystem :SingletonBaseWithMono<PlotSwapSystem>
     {
         EventCenter.Instance.AddListener("点击移动UI", EnterSwapMode);
         EventCenter.Instance.AddListener("取消交换模式", CancelSwapMode);
-        EventCenter.Instance.AddListener<GameObject>("左键点击地块", OnPlotClicked);
+        EventCenter.Instance.AddListener<GameObject>("左键点击", OnPlotClicked);
     }
 
     private void OnDisable()
     {
         EventCenter.Instance.RemoveListener("点击移动UI", EnterSwapMode);
         EventCenter.Instance.RemoveListener("取消交换模式", CancelSwapMode);
-        EventCenter.Instance.RemoveListener<GameObject>("左键点击地块", OnPlotClicked);
+        EventCenter.Instance.RemoveListener<GameObject>("左键点击", OnPlotClicked);
     }
 
     private void EnterSwapMode()

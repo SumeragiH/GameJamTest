@@ -27,6 +27,7 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
 
     private void Start()
     {
+        EventCenter.Instance.AddListener<GameObject>("鼠标持续悬停", ShowPlotDescPanel);
     }
 
     /// <summary>
@@ -85,5 +86,19 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
         }
     }
 
+#region 具体Panel显示的函数
+
+    public void ShowPlotDescPanel(GameObject gameObject)
+    {
+        if (gameObject == null || gameObject.GetComponent<PlotView>() == null)
+        {
+            return;
+        }
+        PlotView plotView = gameObject.GetComponent<PlotView>();
+        PlotDesc panel = ShowPanel<PlotDesc>();
+        panel.SetPlotDesc(plotView);
+    }
+
+#endregion
     
 }

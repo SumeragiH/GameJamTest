@@ -61,4 +61,20 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
         Debug.LogError($"未找到名字为 {name} 的玩家！");
         return null;
     }
+
+    public PlayerData GetPlayerByPosition(int x, int y)
+    {
+        foreach (var playerList in playerDataDictionary.Values)
+        {
+            foreach (var playerData in playerList)
+            {
+                if (playerData.currentX == x && playerData.currentY == y)
+                {
+                    return playerData;
+                }
+            }
+        }
+        Debug.LogError($"未找到位置为 ({x}, {y}) 的玩家！");
+        return null;
+    }
 }
