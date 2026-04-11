@@ -4,6 +4,11 @@ using System.Collections.Generic;
 public class TestImprovement : ImprovementView
 {
     [SerializeField] private ProductData grainProductData; 
+
+    /// <summary>
+    /// 效果：周围1格内的草地每块增加2粮食产出
+    /// </summary>
+    /// <returns></returns>
     public override TotalProductionData ImprovementProduct()
     {
         List<PlotView> plotViews = PlotManageSystem.Instance.GetNearbyPlots(currentPlot.x, currentPlot.y);
@@ -17,9 +22,5 @@ public class TestImprovement : ImprovementView
         }
         TotalProductionData data = new TotalProductionData(grassLandCount, new List<ProductionData> { new ProductionData(grainProductData, grassLandCount * 2) });
         return data;
-    }
-
-    public TestImprovement(PlotView plotView) : base(plotView)
-    {
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 {
-    // 地块列表
+    /// <summary>
+    /// 地块列表，[y][x]访问，y代表行，x代表列，坐标从0开始计数
+    /// </summary>
     public List<List<PlotView>> plotList {get; private set;} = new List<List<PlotView>>();
 
     [SerializeField] private MapPlotConfigData mapPlotConfigData; 
@@ -95,8 +97,9 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
 
         // 测试代码 (temporary)
-        plotList[2][2].specialRewards.Add(new TestSpecialReward(plotList[2][2]));
-        // plotList[2][2].improvements.Add(new TestImprovement(plotList[2][2]));
+        Debug.Log("plotList[0][1]: " + plotList[0][1]);
+        Debug.Log("0, 1 可用改良： " + ImprovementSystem.Instance.GetAvailableImprovements(plotList[0][1]).Count);
+        ImprovementSystem.Instance.AddImprovement(ImprovementSystem.Instance.GetAvailableImprovements(plotList[0][1])[0], 1, 0);
 
         Debug.Log("测试: 打印地块产出");
         TotalProductionData totalProduction = PlotsProduct();
