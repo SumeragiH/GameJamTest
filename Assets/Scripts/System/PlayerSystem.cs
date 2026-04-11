@@ -5,34 +5,34 @@ using UnityEngine;
 public class playerSystem : SingletonBaseWithoutMono<playerSystem>
 {
     //玩家列表，将同一类型的玩家放在一起，方便管理
-    public Dictionary<PlayerTypeEnum,List<PlayerData>> playerDataDictionary;
+    public Dictionary<PlayerTypeEnum,List<PlayerView>> playerDataDictionary;
 
     public playerSystem()
     {
-        playerDataDictionary = new Dictionary<PlayerTypeEnum, List<PlayerData>>();
+        playerDataDictionary = new Dictionary<PlayerTypeEnum, List<PlayerView>>();
         // 初始化玩家数据字典，为每种玩家类型创建一个空列表
         foreach (PlayerTypeEnum playerType in System.Enum.GetValues(typeof(PlayerTypeEnum)))
         {
             if (playerType != PlayerTypeEnum.None) // 排除None类型
             {
-                playerDataDictionary[playerType] = new List<PlayerData>();
+                playerDataDictionary[playerType] = new List<PlayerView>();
             }
         }
     }
 
-    public void AddPlayer(PlayerData playerData)
+    public void AddPlayer(PlayerView playerView)
     {
-        if (playerDataDictionary.ContainsKey(playerData.playerType))
+        if (playerDataDictionary.ContainsKey(playerView.GetPlayerData().playerType))
         {
-            playerDataDictionary[playerData.playerType].Add(playerData);
+            playerDataDictionary[playerView.GetPlayerData().playerType].Add(playerView);
         }
         else
         {
-            Debug.LogError($"玩家类型 {playerData.playerType} 不存在于字典中！");
+            Debug.LogError($"玩家类型 {playerView.GetPlayerData().playerType} 不存在于字典中！");
         }
     }
 
-    public List<PlayerData> GetPlayersByType(PlayerTypeEnum playerType)
+    public List<PlayerView> GetPlayersByType(PlayerTypeEnum playerType)
     {
         if (playerDataDictionary.ContainsKey(playerType))
         {
@@ -46,15 +46,15 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
     }
 
 
-    public PlayerData GetPlayerByName(string name)
+    public PlayerView GetPlayerByName(string name)
     {
         foreach (var playerList in playerDataDictionary.Values)
         {
-            foreach (var playerData in playerList)
+            foreach (var playerView in playerList)
             {
-                if (playerData.playerName == name)
+                if (playerView.GetPlayerData().playerName == name)
                 {
-                    return playerData;
+                    return playerView;
                 }
             }
         }

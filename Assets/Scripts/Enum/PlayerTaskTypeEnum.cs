@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerTaskEnum 
+public enum PlayerTaskTypeEnum 
 {
     Fight = 0,  // 战斗
     Explore = 1, // 探索  
