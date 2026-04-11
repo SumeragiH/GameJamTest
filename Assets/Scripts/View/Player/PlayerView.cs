@@ -13,17 +13,16 @@ using UnityEngine;
 public class PlayerView : MonoBehaviour
 {
     [Header("基础属性")]
-    [SerializeField] private PlayerData playerData;
+    [SerializeField] private PlayerConfigData playerConfigData;
     [SerializeField] private SpriteRenderer spriteRenderer;
     //[SerializeField] private Animator animator;
     [SerializeField] private Canvas taskInfoCanvas;  // 用来显示任务信息
 
     [Header("移动相关")]
-    [SerializeField] private float moveSpeed = 2f;
     private Tween moveTween;
 
     [Header("任务相关")]
-    //private PlayerTask currentTask;
+    private PlayerTaskView currentTask;
     private float taskProgress = 0f;
     private Coroutine taskExecutionCoroutine;
 
@@ -35,7 +34,7 @@ public class PlayerView : MonoBehaviour
     // 状态
     public PlayerStateEnum currentState { get; private set; } = PlayerStateEnum.Idle;
 
-    public PlayerData GetPlayerData() => playerData;
+    public PlayerConfigData GetPlayerData() => playerConfigData;
     public PlayerStateEnum GetCurrentState() => currentState;
     public int GetCurrentX() => currentX;
     public int GetCurrentY() => currentY;
@@ -66,9 +65,9 @@ public class PlayerView : MonoBehaviour
     /// <summary>
     /// 初始化玩家视图
     /// </summary>
-    public void InitializePlayer(PlayerData data, int startX, int startY)
+    public void InitializePlayer(PlayerConfigData data, int startX, int startY)
     {
-        playerData = data;
+        playerConfigData = data;
         currentX = startX;
         currentY = startY;
         currentPlot = PlotManageSystem.Instance.GetPlotView(startX, startY);
@@ -84,185 +83,163 @@ public class PlayerView : MonoBehaviour
         Debug.Log($"[PlayerView] 初始化玩家: {data.playerName} ({data.playerType}) 在位置 ({startX}, {startY})");
     }
 
+    public PlotView GetCurrentPlot() => currentPlot;
+
     #region 任务分配和执行
 
     /// <summary>
     /// 接收任务分配
     /// 这个方法由PlayerManageSystem调用
     /// </summary>
-    //public void AssignTask(PlayerTask task)
-    //{
-    //    if (currentState != PlayerStateEnum.Idle)
-    //    {
-    //        Debug.LogWarning($"[PlayerView] {playerData.playerName} 不是空闲状态，无法接收新任务");
-    //        return;
-    //    }
+    public void AssignTask(PlayerTaskView task)
+    {
+        if (currentState != PlayerStateEnum.Idle)
+        {
+            Debug.LogWarning($"[PlayerView] {playerConfigData.playerName} 不是空闲状态，无法接收新任务");
+            return;
+        }
 
-    //    if (task.taskType != playerData.playerType)
-    //    {
-    //        Debug.LogWarning($"[PlayerView] {playerData.playerName} 的类型 ({playerData.playerType}) 与任务类型 ({task.taskType}) 不匹配");
-    //        return;
-    //    }
+        currentTask = task;
+        task.taskState = playerTaskStateEnum.InProgress;// 设置任务状态为进行中
 
-    //    currentTask = task;
-    //    task.taskState = PlayerTaskState.Assigned;
+        Debug.Log($"[PlayerView] {playerConfigData.playerName} 接收到任务: {task}");
 
-    //    Debug.Log($"[PlayerView] {playerData.playerName} 接收到任务: {task}");
-
-    //    // 开始移动到任务地块
-    //    MoveToTaskPlot();
-    //}
+        // 开始移动到任务地块
+        MoveToTaskPlot();
+    }
 
     /// <summary>
     /// 移动到任务所在的地块
     /// </summary>
-    //private void MoveToTaskPlot()
-    //{
-    //    if (currentTask == null || currentTask.targetPlot == null)
-    //    {
-    //        Debug.LogError("[PlayerView] 任务信息错误，无法移动");
-    //        return;
-    //    }
+    private void MoveToTaskPlot()
+    {
+        if (currentTask == null || currentTask.targetPlot == null)
+        {
+            Debug.LogError("[PlayerView] 任务信息错误，无法移动");
+            return;
+        }
 
-    //    // 取消之前的移动
-    //    if (moveTween != null)
-    //        moveTween.Kill();
+        // 取消之前的移动
+        if (moveTween != null)
+            moveTween.Kill();
 
-    //    PlotView targetPlot = currentTask.targetPlot;
-    //    currentState = PlayerStateEnum.Working;  // 设置为工作中（包括移动）
+        PlotView targetPlot = currentTask.targetPlot;
+        currentState = PlayerStateEnum.Working;  // 设置为工作中（包括移动）
 
-    //    Vector3 targetPosition = targetPlot.transform.position;
-    //    float distance = Vector3.Distance(transform.position, targetPosition);
-    //    float duration = distance / moveSpeed;
+        Vector3 targetPosition = targetPlot.transform.position;
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        float duration = distance / playerConfigData.moveSpeed;
 
-    //    // 播放移动动画
-    //    //PlayMoveAnimation();
+        // 播放移动动画
+        //PlayMoveAnimation();
 
-    //    // 使用DOTween移动
-    //    moveTween = transform.DOMove(targetPosition, duration).SetEase(Ease.InOutQuad)
-    //        .OnComplete(() =>
-    //        {
-    //            // 到达任务地块
-    //            currentPlot = targetPlot;
-    //            currentX = targetPlot.x;
-    //            currentY = targetPlot.y;
+        // 使用DOTween移动
+        moveTween = transform.DOMove(targetPosition, duration).SetEase(Ease.InOutQuad)
+            .OnComplete(() =>
+            {
+                // 到达任务地块
+                currentPlot = targetPlot;
+                currentX = targetPlot.x;
+                currentY = targetPlot.y;
 
-    //            PlayIdleAnimation();
+                //PlayIdleAnimation();
 
-    //            Debug.Log($"[PlayerView] {playerData.playerName} 已到达任务地块 ({currentX}, {currentY})");
+                Debug.Log($"[PlayerView] {playerConfigData.playerName} 已到达任务地块 ({currentX}, {currentY})");
 
-    //            // 开始执行任务
-    //            ExecuteTask();
-    //        });
+                // 开始执行任务
+                ExecuteTask();
+            });
 
-    //    Debug.Log($"[PlayerView] {playerData.playerName} 开始移动到任务地块 ({targetPlot.x}, {targetPlot.y})，耗时 {duration:F2} 秒");
-    //}
+        Debug.Log($"[PlayerView] {playerConfigData.playerName} 开始移动到任务地块 ({targetPlot.x}, {targetPlot.y})，耗时 {duration:F2} 秒");
+    }
 
     /// <summary>
     /// 执行任务
     /// </summary>
-    //private void ExecuteTask()
-    //{
-    //    if (currentTask == null)
-    //    {
-    //        Debug.LogError("[PlayerView] 没有任务可执行");
-    //        return;
-    //    }
+    private void ExecuteTask()
+    {
+        if (currentTask == null)
+        {
+            Debug.LogError("[PlayerView] 没有任务可执行");
+            return;
+        }
 
-    //    currentTask.taskState = PlayerTaskState.InProgress;
+        currentTask.taskState = playerTaskStateEnum.InProgress;
 
-    //    // 播放工作动画
-    //    //PlayWorkAnimation();
+        // 播放工作动画
+        //PlayWorkAnimation();
 
-    //    string taskName = GetTaskName(currentTask.taskType);
-    //    Debug.Log($"[PlayerView] {playerData.playerName} 开始执行任务: {taskName}");
+        //string taskName = GetTaskName(currentTask.taskType);
+        //Debug.Log($"[PlayerView] {playerConfigData.playerName} 开始执行任务: {taskName}");
 
-    //    // 启动任务执行协程
-    //    if (taskExecutionCoroutine != null)
-    //        StopCoroutine(taskExecutionCoroutine);
+        // 启动任务执行协程
+        if (taskExecutionCoroutine != null)
+            StopCoroutine(taskExecutionCoroutine);
 
-    //    taskExecutionCoroutine = StartCoroutine(ExecuteTaskCoroutine());
-    //}
+        taskExecutionCoroutine = StartCoroutine(ExecuteTaskCoroutine());
+    }
 
     /// <summary>
     /// 任务执行协程
     /// </summary>
-    //private IEnumerator ExecuteTaskCoroutine()
-    //{
-    //    float elapsedTime = 0f;
-    //    float taskDuration = currentTask.taskDuration;
-    //    string taskName = GetTaskName(currentTask.taskType);
-
-    //    while (elapsedTime < taskDuration)
-    //    {
-    //        elapsedTime += Time.deltaTime;
-    //        currentTask.taskProgress = Mathf.Clamp01(elapsedTime / taskDuration);
-
-    //        // 每隔一段时间输出进度信息
-    //        if (Mathf.Approximately(elapsedTime % 1f, Time.deltaTime))
-    //        {
-    //            Debug.Log($"[PlayerView] {playerData.playerName} - {taskName} 进度: {(currentTask.taskProgress * 100):F0}% | " +
-    //                $"剩余时间: {(taskDuration - elapsedTime):F1}秒");
-    //        }
-
-    //        yield return null;
-    //    }
-
-    //    // 任务完成
-    //    CompleteTask();
-    //}
+    private IEnumerator ExecuteTaskCoroutine()
+    {
+        //执行任务直接进行数值计算，然后等待回合
+        yield return null;
+        // 任务完成
+        CompleteTask();
+    }
 
     /// <summary>
     /// 完成任务
     /// </summary>
-    //private void CompleteTask()
-    //{
-    //    if (currentTask == null)
-    //        return;
+    private void CompleteTask()
+    {
+        if (currentTask == null)
+            return;
 
-    //    string taskName = GetTaskName(currentTask.taskType);
-    //    Debug.Log($"[PlayerView] {playerData.playerName} 完成了任务: {taskName}");
+        //string taskName = GetTaskName(currentTask.taskType);
+        //Debug.Log($"[PlayerView] {playerData.playerName} 完成了任务: {taskName}");
 
-    //    // 根据任务类型增加经验值和改变心情
-    //    int expReward = 0;
-    //    int moodReward = 0;
+        // 根据任务类型增加经验值和改变心情
+        int expReward = 0;
+        int moodReward = 0;
 
-    //    switch (currentTask.taskType)
-    //    {
-    //        case PlayerTypeEnum.Fighter:
-    //            expReward = 10;
-    //            moodReward = 15;
-    //            Debug.Log($"[PlayerView] 战斗任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
-    //            break;
-    //        case PlayerTypeEnum.Explorer:
-    //            expReward = 12;
-    //            moodReward = 20;
-    //            Debug.Log($"[PlayerView] 探索任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
-    //            break;
-    //        case PlayerTypeEnum.Socializer:
-    //            expReward = 8;
-    //            moodReward = 25;
-    //            Debug.Log($"[PlayerView] 社交任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
-    //            break;
-    //    }
+        switch (currentTask.taskData.taskType)
+        {
+            case PlayerTaskTypeEnum.Fight:
+                expReward = 10;
+                moodReward = 15;
+                Debug.Log($"[PlayerView] 战斗任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
+                break;
+            case PlayerTaskTypeEnum.Explore:
+                expReward = 12;
+                moodReward = 20;
+                Debug.Log($"[PlayerView] 探索任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
+                break;
+            case PlayerTaskTypeEnum.Social:
+                expReward = 8;
+                moodReward = 25;
+                Debug.Log($"[PlayerView] 社交任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
+                break;
+        }
 
-    //    playerData.ExperiencePoints += expReward;
-    //    playerData.MoodPoints = Mathf.Min(100, playerData.MoodPoints + moodReward);
-    //    playerData.playerState = PlayerStateEnum.Idle;
+        playerConfigData.ExperiencePoints += expReward;
+        playerConfigData.MoodPoints = Mathf.Min(100, playerConfigData.MoodPoints + moodReward);
+        playerConfigData.playerState = PlayerStateEnum.Idle;
 
-    //    Debug.Log($"[PlayerView] {playerData.playerName} 当前状态 | 经验值: {playerData.ExperiencePoints} | 心情: {playerData.MoodPoints}");
+        Debug.Log($"[PlayerView] {playerConfigData.playerName} 当前状态 | 经验值: {playerConfigData.ExperiencePoints} | 心情: {playerConfigData.MoodPoints}");
+        // 通知系统任务完成
+        //PlayerTaskSystem.Instance.CompleteTask(currentTask.taskID);
 
-    //    // 通知系统任务完成
-    //    PlayerTaskSystem.Instance.CompleteTask(currentTask.taskID);
+        // 重置状态
+        //PlayIdleAnimation();
+        currentState = PlayerStateEnum.Idle;
+        currentTask = null;
+        taskProgress = 0f;
 
-    //    // 重置状态
-    //    PlayIdleAnimation();
-    //    currentState = PlayerStateEnum.Idle;
-    //    currentTask = null;
-    //    taskProgress = 0f;
-
-    //    EventCenter.Instance.EventTrigger<PlayerView>("玩家任务完成", this);
-    //}
+        EventCenter.Instance.EventTrigger<PlayerView>("玩家任务完成", this);
+    }
 
     /// <summary>
     /// 获取任务名称

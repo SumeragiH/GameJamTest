@@ -43,10 +43,11 @@ public class PlotDesc : BasePanel
         TotalProductionData totalProduction = plot.PlotProduct();
         foreach (var production in totalProduction.productionList)
         {
-            downDescText += $"{production.Amount} {production.product.productName}\n";
+            downDescText += $"{production.amount} {production.product.productName}\n";
         }
         
-        PlayerData playerData = playerSystem.Instance.GetPlayerByPosition(plot.x, plot.y);
+        PlayerView playerView = playerSystem.Instance.GetPlayerByPosition(plot.x, plot.y);
+        PlayerConfigData playerData = playerView?.GetPlayerData();
         if (playerData != null)
         {
             downDescText += $"\n{playerData.playerName} 在这个单元格上\n";
