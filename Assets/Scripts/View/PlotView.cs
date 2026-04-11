@@ -29,8 +29,9 @@ public class PlotView : MonoBehaviour
 
     void Start()
     {
-        EventCenter.Instance.AddListener<GameObject>("鼠标悬停进入地块", HighLightPlot);
-        EventCenter.Instance.AddListener<GameObject>("鼠标悬停离开地块", UnHighLightPlot);
+        originalColor = GetComponent<SpriteRenderer>().color; // 存储原始颜色
+        EventCenter.Instance.AddListener<GameObject>("鼠标悬停地块", HighLightPlot);
+        EventCenter.Instance.AddListener<GameObject>("左键点击地块", SelectPlot);
     }
 
     /// <summary>
@@ -72,60 +73,113 @@ public class PlotView : MonoBehaviour
         eventView.ResolveEvent(this);
     }
 
-    //高亮显示地块参数
+    #region 高亮显示地块
     //高亮显示地块参数
     [Header("高亮显示地块的参数")]
-    public Color greenHighlightColor = new Color(0f, 1f, 0f, 1f);  // 绿色
-    public float highlightAlpha = 0.3f;  // 透明度
+    public Color greenHighlightColor = new Color(0.2f, 1f, 0f, 0.5f);  // 绿色
+    public Color blueHighlightColor = new Color(0f, 0.8f, 1f, 1f);  // 蓝色
     public float ChangeDuration = 0.2f;  // 高亮过渡持续时间
     private Tween colorTween;  // 用于存储当前的颜色过渡
-    private Color originalColor;  // 存储原始颜色，以便取消高亮时恢复
+    private Color originalColor;  // 存储原始颜色，方便恢复
 
     /// <summary>
-    /// 高亮显示地块
+    /// 绿色高亮显示地块（鼠标悬停时）
     /// </summary>
     public void HighLightPlot(GameObject plot)
     {
-        if (plot != this.gameObject)
+        // 如果已经被选中，不需要绿色高亮，保持蓝色
+        if (isSelected)
         {
             return;
         }
-        isSelected=true;
+
+        if (plot != this.gameObject || plot == null)
+        {
+            RestoreColor(plot);
+            return;
+        }
+
         colorTween?.Kill();
 
-        //获取原始颜色（如果没有存储，就用当前颜色）
-
         SpriteRenderer spriteRenderer = plot.GetComponent<SpriteRenderer>();
-
         if (spriteRenderer == null)
         {
             return;
         }
-        originalColor = spriteRenderer.color;
-        // 计算目标颜色：原色 + 30%绿色
-        Color targetColor = Color.Lerp(spriteRenderer.color, greenHighlightColor, highlightAlpha);
 
+        Color targetColor = greenHighlightColor;
         colorTween = spriteRenderer.DOColor(targetColor, ChangeDuration).SetEase(Ease.OutQuad);
     }
 
     /// <summary>
-    /// 取消高亮显示地块
+    /// 恢复地块颜色到原始状态
     /// </summary>
-    public void UnHighLightPlot(GameObject plot )
+    public void RestoreColor(GameObject plot)
     {
-        if (plot != this.gameObject)
+        // 如果地块被选中了，不恢复颜色
+        if (isSelected)
         {
             return;
         }
-        isSelected=false;
+
+        if (plot == null || plot != this.gameObject)
+        {
+            SpriteRenderer SR = GetComponent<SpriteRenderer>();
+            if (SR.color == originalColor)
+            {
+                return;
+            }
+
+            colorTween?.Kill();
+
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            colorTween = spriteRenderer.DOColor(originalColor, ChangeDuration).SetEase(Ease.OutQuad);
+        }
+    }
+
+    /// <summary>
+    /// 蓝色高亮显示地块，表示选中状态（点击时）
+    /// </summary>
+    public void SelectPlot(GameObject plot)
+    {
+        if (plot != this.gameObject || plot == null)
+        {
+            isSelected = false;
+            RestoreColor(plot);
+            return;
+        }
+
+        isSelected = true;
         colorTween?.Kill();
 
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderer = plot.GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
             return;
         }
 
-        colorTween = spriteRenderer.DOColor(originalColor, ChangeDuration).SetEase(Ease.OutQuad);
+        Color targetColor = blueHighlightColor;
+        colorTween = spriteRenderer.DOColor(targetColor, ChangeDuration).SetEase(Ease.OutQuad);
     }
+
+    /// <summary>
+    /// 取消选中地块
+    /// </summary>
+    public void DeselectPlot()
+    {
+        isSelected = false;
+        RestoreColor(this.gameObject);
+    }
+    #endregion
+
+
+
+    #region 地块被选中时显示信息面板
+
+    #endregion
 }
