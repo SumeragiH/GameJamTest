@@ -1,5 +1,6 @@
-using UnityEngine;
+using DG.Tweening;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 {
@@ -155,6 +156,13 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
     }
 
+
+    /// <summary>
+    /// 得到地块的坐标为(x,y)的地块对象，坐标从0开始计数，x表示横坐标，y表示纵坐标。超出地图范围的坐标返回null
+    /// </summary>
+    /// <param name="x">地块的横坐标，从0开始计数</param>
+    /// <param name="y">地块的纵坐标，从0开始计数</param>
+    /// <returns>返回指定坐标的地块对象，如果坐标超出地图范围则返回null</returns>
     public PlotView GetPlotView(int x, int y)
     {
         if (y >= plotList.Count || x >= plotList[y].Count)
@@ -187,8 +195,109 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         return nearbyPlots;
     }
 
+    /// <summary>
+    /// 检测坐标 (x,y) 是否在地图范围内
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     private bool IsInMap(int x, int y)
     {
         return x >= 0 && x < colNum && y >= 0 && y < rowNum;
     }
+
+    #region 交换地块位置
+    /// <summary>
+    /// 移动地块从 (fromX, fromY) 到 (toX, toY)
+    /// </summary>
+    /// <param name="fromX">源地块X坐标</param>
+    /// <param name="fromY">源地块Y坐标</param>
+    /// <param name="toX">目标地块X坐标</param>
+    /// <param name="toY">目标地块Y坐标</param>
+    /// <param name="duration">移动时长</param>
+    public void MovePlot(int fromX, int fromY, int toX, int toY, float duration = 0.5f)
+    {
+        // 边界检查
+        if (!IsInMap(fromX, fromY) || !IsInMap(toX, toY))
+        {
+            Debug.LogError($"地块移动超出边界: ({fromX}, {fromY}) -> ({toX}, {toY})");
+            return;
+        }
+
+        PlotView sourcePlot = plotList[fromY][fromX];
+        PlotView targetPlot = plotList[toY][toX];
+
+        if (sourcePlot == null)
+        {
+            Debug.LogError($"源地块不存在: ({fromX}, {fromY})");
+            return;
+        }
+
+        // 交换 plotList 中的引用
+        plotList[fromY][fromX] = targetPlot;
+        plotList[toY][toX] = sourcePlot;
+
+        // 更新地块的逻辑坐标
+        sourcePlot.x = toX;
+        sourcePlot.y = toY;
+        if (targetPlot != null)
+        {
+            targetPlot.x = fromX;
+            targetPlot.y = fromY;
+        }
+
+        // 更新配置数据
+        SwapPlotConfig(fromX, fromY, toX, toY);
+
+        // 播放移动动画
+        AnimatePlotMovement(sourcePlot, fromX, fromY, toX, toY, duration);
+        if (targetPlot != null)
+        {
+            AnimatePlotMovement(targetPlot, toX, toY, fromX, fromY, duration);
+        }
+
+        // 触发事件
+        EventCenter.Instance.EventTrigger<PlotView, PlotView>("地块被交换", sourcePlot, targetPlot);
+    }
+
+    /// <summary>
+    /// 交换配置数据中的地块类型
+    /// </summary>
+    private void SwapPlotConfig(int x1, int y1, int x2, int y2)
+    {
+        // 通过反射或创建Setter方法来修改MapPlotConfigData
+        // 这里假设已经添加了SetPlot方法到MapPlotConfigData
+        PlotTypeEnum type1 = mapPlotConfigData.GetPlot(x1, y1);
+        PlotTypeEnum type2 = mapPlotConfigData.GetPlot(x2, y2);
+
+        mapPlotConfigData.SetPlot(x1, y1, type2);
+        mapPlotConfigData.SetPlot(x2, y2, type1);
+    }
+
+    /// <summary>
+    /// 播放地块移动动画
+    /// </summary>
+    private void AnimatePlotMovement(PlotView plot, int fromX, int fromY, int toX, int toY, float duration)
+    {
+        // 计算当前位置和目标位置
+        Vector3 targetPosition = CalculatePlotPosition(toX, toY);
+
+        // 使用 DOTween 播放移动动画
+        plot.transform.DOMove(targetPosition, duration).SetEase(Ease.InOutQuad);
+    }
+
+    /// <summary>
+    /// 根据逻辑坐标计算世界坐标
+    /// </summary>
+    private Vector3 CalculatePlotPosition(int x, int y)
+    {
+        Vector3 rowStartPos = plotStartPosition.position
+            + new Vector3(0, -y * plotHeight, 0)
+            + new Vector3((y % 2 == 0) ? 0 : plotWidth / 2, 0, 0)
+            + new Vector3(0, 0, -0.01f);
+
+        Vector3 position = new Vector3(x * plotWidth, 0, 0) + rowStartPos;
+        return position;
+    }
+    #endregion
 }

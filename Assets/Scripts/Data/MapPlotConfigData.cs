@@ -36,4 +36,28 @@ public class MapPlotConfigData : ScriptableObject
     {
         return plotsConfig.Count;
     }
+    /// <summary>
+    /// 设置地块类型的方法，用于交换地块的时候调用
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="plotType"></param>
+    public void SetPlot(int x, int y, PlotTypeEnum plotType)
+    {
+        if (y >= plotsConfig.Count || x >= plotsConfig[y].row.Count)
+            return;
+        plotsConfig[y].row[x] = plotType;
+    }
+
+    /// <summary>
+    /// 交换两个位置的地块类型
+    /// </summary>
+    public void SwapPlots(int x1, int y1, int x2, int y2)
+    {
+        if (y1 >= plotsConfig.Count || x1 >= plotsConfig[y1].row.Count || y2 >= plotsConfig.Count || x2 >= plotsConfig[y2].row.Count)//越界检查
+            return;
+        PlotTypeEnum temp = GetPlot(x1, y1);
+        SetPlot(x1, y1, GetPlot(x2, y2));
+        SetPlot(x2, y2, temp);
+    }
 }
