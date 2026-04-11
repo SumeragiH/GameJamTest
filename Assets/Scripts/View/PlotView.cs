@@ -12,6 +12,8 @@ public class PlotView : MonoBehaviour
 
     public bool isSelected {get; private set;} = false; // 是否被选中
 
+    [SerializeField] public bool canPassed {get; private set;} = true; // 是否能通行
+
     public int x = -1; // 地块横坐标，从0开始计数
     public int y = -1; // 地块纵坐标，从0开始计数
     [field: SerializeField] public PlotTypeEnum plotType {get; private set;} = PlotTypeEnum.None; // 地块类型
