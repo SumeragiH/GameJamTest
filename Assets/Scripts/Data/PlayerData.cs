@@ -17,6 +17,7 @@ public class PlayerData : ScriptableObject
     public float playerAtk; // 玩家攻击力，影响玩家的战斗能力
     public float playerDef; // 玩家防御力，影响玩家的生存能力
 
+    public PlayerStateEnum playerState; // 玩家状态，影响玩家的行为和可执行的活动
     public float MoodPoints; // 心情值，范围0-100，影响玩家的行为和产出效率
     public float ExperiencePoints; // 经验值，玩家通过完成任务和活动获得，达到一定值后升级
 
