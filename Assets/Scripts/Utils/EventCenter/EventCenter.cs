@@ -30,6 +30,16 @@ public class EventInfo : IEventInfo
     }
 }
 
+//存储有两个参数的委托
+public class EventInfo<T, K> : IEventInfo
+{
+    public UnityAction<T, K> actions;
+    public EventInfo(UnityAction<T, K> action)
+    {
+        this.actions += action;
+    }
+}
+
 public class EventCenter : SingletonBaseWithMono<EventCenter>
 {
     //事件中心容器，ksy是事件名称，value是事件基类，实现单例模式存储泛型和非泛型的委托
@@ -43,6 +53,7 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
     /// <param name="action">准备用来处理事件的委托函数</param>
     public void AddListener<T>(string name, UnityAction<T> action)
     {
+
         if(string.IsNullOrEmpty(name) || action == null)
             return;
         //如果事件中心容器中有这个委托了
@@ -63,6 +74,8 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
     /// <param name="action">准备用来处理事件的委托函数</param>
     public void AddListener(string name, UnityAction action)
     {
+        if (string.IsNullOrEmpty(name) || action == null)
+            return;
         //如果事件中心容器中有这个委托了
         if (eventDic.ContainsKey(name))
         {
@@ -74,6 +87,26 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
             eventDic.Add(name, new EventInfo(action));
         }
     }
+    /// <summary>
+    /// 添加事件监听
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="K"></typeparam>
+    /// <param name="name"></param>
+    /// <param name="action"></param>
+    public void AddListener<T, K>(string name, UnityAction<T, K> action)
+    {
+        if (string.IsNullOrEmpty(name) || action == null)
+            return;
+        if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T, K>).actions += action;
+        }
+        else
+        {
+            eventDic.Add(name, new EventInfo<T, K>(action));
+        }
+    }
 
     /// <summary>
     /// 删除事件监听，当玩家等监听的对象被删除了，那么他们的监听方法也删除
@@ -82,6 +115,8 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
     /// <param name="action">要删除的委托函数</param>>
     public void RemoveListener<T>(string name, UnityAction<T> action)
     {
+        if (string.IsNullOrEmpty(name) || action == null)
+            return;
         //如果事件中心的容器中有这个委托，就移除
         if (eventDic.ContainsKey(name))
         {
@@ -95,10 +130,22 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
     /// <param name="action">要删除的委托函数</param>
     public void RemoveListener(string name, UnityAction action)
     {
+        if (string.IsNullOrEmpty(name) || action == null)
+            return;
         //如果事件中心的容器中有这个委托，就移除
         if (eventDic.ContainsKey(name))
         {
             (eventDic[name] as EventInfo).actions -= action;
+        }
+    }
+
+    public void RemoveListener<T, K>(string name, UnityAction<T, K> action)
+    {
+        if (string.IsNullOrEmpty(name) || action == null)
+            return;
+        if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T, K>).actions -= action;
         }
     }
 
@@ -123,6 +170,21 @@ public class EventCenter : SingletonBaseWithMono<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             (eventDic[name] as EventInfo).actions.Invoke();
+        }
+    }
+    /// <summary>
+    /// 事件触发（两个参数）
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="K"></typeparam>
+    /// <param name="name"></param>
+    /// <param name="obj1"></param>
+    /// <param name="obj2"></param>
+    public void EventTrigger<T, K>(string name, T obj1, K obj2)
+    {
+        if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T, K>).actions.Invoke(obj1, obj2);
         }
     }
 

@@ -106,7 +106,7 @@ public class PlotView : MonoBehaviour
         {
             return;
         }
-
+        //Debug.Log("高亮显示地块: " + plot.GetComponent<PlotView>().x + ", " + plot.GetComponent<PlotView>().y);
         Color targetColor = greenHighlightColor;
         colorTween = spriteRenderer.DOColor(targetColor, ChangeDuration).SetEase(Ease.OutQuad);
     }
