@@ -5,17 +5,19 @@ using UnityEngine;
 public class PlotView : MonoBehaviour
 {
     // 产出
-    [field: SerializeField]public int grainOutput {get; private set;} = 0; // 粮食
-    [field: SerializeField]public int productivityOutput {get; private set;} = 0; // 生产力
+    [field: SerializeField]public List<ProductionData> productions {get; private set;} = new(); // 地块产出列表
 
     // 地块状态
     public bool isDetected {get; private set;} = false; // 是否被探明 
 
     public bool isSelected {get; private set;} = false; // 是否被选中
+
+    public int x = -1; // 地块横坐标，从0开始计数
+    public int y = -1; // 地块纵坐标，从0开始计数
     [field: SerializeField] public PlotTypeEnum plotType {get; private set;} = PlotTypeEnum.None; // 地块类型
 
     // 改良
-    public List<ImprovementView> improvements {get; private set;} = new(); // 已经建造的改良
+    public List<ImprovementView> improvements = new(); // 已经建造的改良
 
     // 怪物
     public List<MonsterView> monsters = new(); // 地块怪物
@@ -29,6 +31,33 @@ public class PlotView : MonoBehaviour
         EventCenter.Instance.AddListener<GameObject>("鼠标悬停进入地块", HighLightPlot);
         EventCenter.Instance.AddListener<GameObject>("鼠标悬停离开地块", UnHighLightPlot);
         EventCenter.Instance.AddListener<GameObject>("左键点击进入地块", SelectPlot);
+    }
+
+    /// <summary>
+    /// 计算产出的核心方法类
+    /// </summary>
+    public TotalProductionData PlotProduct()
+    {
+        TotalProductionData totalProduction = new TotalProductionData(0, new List<ProductionData>());
+
+        // 加上地块的基础产出
+        foreach (var production in productions)
+        {
+            totalProduction += new TotalProductionData(0, new List<ProductionData> { production });
+        }
+
+        // 加上改良的额外产出
+        foreach (var improvement in improvements)
+        {
+            totalProduction += improvement.ImprovementProduct();
+        }
+
+        // 加上特殊奖励的额外产出
+        foreach (var specialReward in specialRewards)
+        {
+            totalProduction += specialReward.ImprovementProduct();
+        }
+        return totalProduction;
     }
 
     public void OnEventApplied(EventView eventView)

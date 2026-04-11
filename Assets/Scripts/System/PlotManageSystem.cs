@@ -82,6 +82,8 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
                     Vector3 position = new Vector3(x * plotWidth, 0, 0) + rowStartPos;
                     plotList[y][x].transform.position = position;
                     plotList[y][x].transform.rotation = plotRotation;
+                    plotList[y][x].x = x;
+                    plotList[y][x].y = y;
                 }
             }
         }
@@ -89,8 +91,38 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         // 订阅事件
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
+
+
+        // 测试代码 (temporary)
+        plotList[2][2].specialRewards.Add(new TestSpecialReward(plotList[2][2]));
+        // plotList[2][2].improvements.Add(new TestImprovement(plotList[2][2]));
+
+        Debug.Log("测试: 打印地块产出");
+        TotalProductionData totalProduction = PlotsProduct();
+        Debug.Log(totalProduction.ToString());
     }
 
+    public TotalProductionData PlotsProduct()
+    {
+        TotalProductionData totalProduction = new TotalProductionData(0, new List<ProductionData>());
+
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    totalProduction += plotList[y][x].PlotProduct();
+                }
+            }
+        }
+        return totalProduction;
+    }
+
+    /// <summary>
+    /// 应用特殊事件效果
+    /// </summary>
+    /// <param name="eventView"></param>
     private void OnEventApplied(EventView eventView)
     {
         for (int y = 0; y < rowNum; y++)
@@ -105,6 +137,10 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
     }
 
+    /// <summary>
+    /// 移除特殊事件效果
+    /// </summary>
+    /// <param name="eventView"></param>
     private void OnEventResolved(EventView eventView)
     {
         for (int y = 0; y < rowNum; y++)
@@ -119,7 +155,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
     }
 
-    public PlotView getPlotView(int x, int y)
+    public PlotView GetPlotView(int x, int y)
     {
         if (y >= plotList.Count || x >= plotList[y].Count)
             return null;
@@ -132,16 +168,16 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
     /// <param name="x">地块的横坐标，从0开始计数</param>
     /// <param name="y">地块的纵坐标，从0开始计数</param>
     /// <returns>返回周围地块的列表，长度一定为6，依次返回左上，右上，右，右下，左下，左的地块。不存在的地块返回null</returns>
-    public List<PlotView> getNearbyPlots(int x, int y)
+    public List<PlotView> GetNearbyPlots(int x, int y)
     {
         List<PlotView> nearbyPlots = new List<PlotView>();
         foreach (var offset in nearbyOffsets)
         {
             int newX = x + offset.Item1;
             int newY = y + offset.Item2;
-            if (isInMap(newX, newY))
+            if (IsInMap(newX, newY))
             {
-                nearbyPlots.Add(getPlotView(newX, newY));
+                nearbyPlots.Add(GetPlotView(newX, newY));
             }
             else
             {
@@ -151,7 +187,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         return nearbyPlots;
     }
 
-    private bool isInMap(int x, int y)
+    private bool IsInMap(int x, int y)
     {
         return x >= 0 && x < colNum && y >= 0 && y < rowNum;
     }

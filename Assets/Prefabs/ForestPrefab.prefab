@@ -101,9 +101,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f349ec0731320df4a9055b7ab1c40ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <grainOutput>k__BackingField: 3
-  <productivityOutput>k__BackingField: 2
+  <productions>k__BackingField:
+  - product: {fileID: 11400000, guid: 22584979d5397aa4da8516bcd9badf13, type: 2}
+    amount: 2
+  - product: {fileID: 11400000, guid: 33662a8631a4ef84fb5b07b372deb22b, type: 2}
+    amount: 2
+  x: -1
+  y: -1
   <plotType>k__BackingField: 3
+  improvements: []
+  monsters: []
+  specialRewards: []
+  greenHighlightColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightAlpha: 0.3
+  ChangeDuration: 0.2
 --- !u!1 &4035509321416161026
 GameObject:
   m_ObjectHideFlags: 0

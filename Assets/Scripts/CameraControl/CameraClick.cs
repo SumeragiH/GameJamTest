@@ -15,6 +15,7 @@ public class CameraClick : MonoBehaviour
 
     private void Start()
     {
+
         // 缓存Plot层
         plotLayer = LayerMask.NameToLayer("Plot");
 
@@ -26,13 +27,14 @@ public class CameraClick : MonoBehaviour
     {
         if (!isMouseAvailable) return;
 
+
         Ray rayClick = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        //射线检测
-        if (Physics.Raycast(rayClick, out hit, 1000f))
+        //射线检测并判断点击的是不是地块层
+        if (Physics.Raycast(rayClick, out hit, 1000f) && hit.collider.gameObject.layer == plotLayer)
         {
-            if(hit.collider == null) return;
+            if (hit.collider == null) return;
             // 判断点击的是不是地块层
             if (hit.collider.gameObject.layer == plotLayer)
             {
@@ -42,17 +44,8 @@ public class CameraClick : MonoBehaviour
                 //如果悬停到新的地块，触发事件
                 if (currentPlot != lastPlot)
                 {
-                    // 离开旧地块
-                    if (lastPlot != null)
-                    {
-                        //Debug.Log("鼠标离开地块：" + lastPlot.name);
-                        EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停离开地块", lastPlot);
-                    }
-
-                    // 进入新地块
-                    //Debug.Log("鼠标进入地块：" + currentPlot.name);
-                    lastPlot = currentPlot;
-                    EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停进入地块", currentPlot);
+                    //Debug.Log("鼠标离开地块：" + lastPlot.name);
+                    EventCenter.Instance.EventTrigger<GameObject>("鼠标悬停离开地块", lastPlot);
                 }
                 // 点击事件
                 if (Input.GetMouseButtonDown(0))
@@ -80,6 +73,7 @@ public class CameraClick : MonoBehaviour
 
 
     }
+
 
     private void LeftClickPlot(GameObject plot)
     {

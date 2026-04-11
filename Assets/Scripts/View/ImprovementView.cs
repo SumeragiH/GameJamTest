@@ -1,5 +1,16 @@
 using UnityEngine;
 
-public class ImprovementView : MonoBehaviour
+/// <summary>
+/// 改良，即策划md里面的“建筑“
+/// 具体的奖励逻辑在自类中写
+/// </summary>
+public abstract class ImprovementView : MonoBehaviour
 {
+    protected PlotView currentPlot; // 所在地块
+    public abstract TotalProductionData ImprovementProduct();
+
+    public ImprovementView(PlotView plotView)
+    {
+        currentPlot = plotView;
+    }
 }
