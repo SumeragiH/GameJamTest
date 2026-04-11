@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  moveSpeed: 5
+  moveSpeed: 25
   isCheckInput: 1
 --- !u!114 &330585549
 MonoBehaviour:
@@ -656,7 +656,7 @@ MonoBehaviour:
     prefab: {fileID: 7363115273091248720, guid: 73c6a95e5d8f81147be37eb317657176,
       type: 3}
   - plotType: 3
-    prefab: {fileID: 4215294420451279576, guid: 7ef7edef53291174da2a60cba00b30fa,
+    prefab: {fileID: 7806062766737376120, guid: a8b5b37b1cb95f2499e8f179099f7f60,
       type: 3}
   - plotType: 4
     prefab: {fileID: 0}
@@ -793,7 +793,7 @@ Transform:
   m_GameObject: {fileID: 802846634}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 10, z: 6}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -946,7 +946,7 @@ Transform:
   m_GameObject: {fileID: 955380617}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 2}
+  m_LocalPosition: {x: -1, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

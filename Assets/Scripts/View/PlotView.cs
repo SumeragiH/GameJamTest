@@ -91,7 +91,7 @@ public class PlotView : MonoBehaviour
     public void HighLightPlot(GameObject plot)
     {
         // 判断是否为地块
-        if (plot == null || plot.GetComponent<PlotView>() == null)
+        if (plot == null)
         {
             return;
         }

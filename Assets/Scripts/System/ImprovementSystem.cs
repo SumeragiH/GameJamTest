@@ -19,7 +19,6 @@ class ImprovementSystem : SingletonBaseWithMono<ImprovementSystem>
             improvement.transform.parent = plotView.transform;
             improvement.transform.localPosition = Vector3.zero;
             improvement.transform.localRotation = Quaternion.identity;
-            improvement.transform.position -= new Vector3(0, -0.1f, 0);
         }
     }
 
