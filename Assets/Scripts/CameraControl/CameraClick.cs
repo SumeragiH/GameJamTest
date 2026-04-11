@@ -52,6 +52,11 @@ public class CameraClick : MonoBehaviour
             EventCenter.Instance.EventTrigger<GameObject>("右键点击地块", currentPlot);
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape)&&PlotSwapSystem.Instance.isSwapMode)
+        {
+            EventCenter.Instance.EventTrigger("取消交换模式");
+        }
+
     }
 
 
