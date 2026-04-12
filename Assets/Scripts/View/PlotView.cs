@@ -22,7 +22,7 @@ public class PlotView : MonoBehaviour
     public List<ImprovementView> improvements = new(); // 已经建造的改良
 
     // 怪物
-    public List<MonsterView> monsters = new(); // 地块怪物
+    public List<MonsterSpawnerView> monsters = new(); // 地块怪物
 
     // 宝箱
     public TreasureBoxView treasureBox = null; // 地块宝箱

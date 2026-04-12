@@ -8,26 +8,26 @@ using UnityEngine;
 /// </summary>
 class MonsterSystem : SingletonBaseWithMono<MonsterSystem>
 {
-    [field: SerializeField] public List<MonsterView> monsterPrefabs { get; private set; } = new List<MonsterView>(); // 怪物预制体列表，可以在编辑器中设置
-    private List<MonsterView> monsters = new List<MonsterView>();
+    [field: SerializeField] public List<MonsterSpawnerView> monsterPrefabs { get; private set; } = new List<MonsterSpawnerView>(); // 怪物预制体列表，可以在编辑器中设置
+    private List<MonsterSpawnerView> monsters = new List<MonsterSpawnerView>();
 
 
     void Start()
     {
-        EventCenter.Instance.AddListener<MonsterView>("怪物死亡", OnMonsterDeath);
+        EventCenter.Instance.AddListener<MonsterSpawnerView>("怪物死亡", OnMonsterDeath);
     }
 
-    public List<MonsterView> GetMonstersPrefab()
+    public List<MonsterSpawnerView> GetMonstersPrefab()
     {
         return monsterPrefabs;
     }
 
-    public void AddMonster(MonsterView monster)
+    public void AddMonster(MonsterSpawnerView monster, PlotView plotView)
     {
         monsters.Add(monster);
     }
 
-    public void OnMonsterDeath(MonsterView monster)
+    public void OnMonsterDeath(MonsterSpawnerView monster)
     {
         // TODO: 可能的游戏逻辑？
         Debug.Log("怪物死亡: " + monster.monsterName);
