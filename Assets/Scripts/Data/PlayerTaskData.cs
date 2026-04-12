@@ -7,11 +7,17 @@ public class PlayerTaskData : MonoBehaviour
     [Header("任务基础信息")]
     public int taskID; // 任务ID，唯一标识符
     public string taskName; // 任务名称
-    public int maxPlayerCount; // 任务可解取的最大玩家数量
-    public int PlayerCount; // 设置的可分配的玩家数量
-    public List<PlayerView> assignedPlayers; // 已分配的玩家列表
     public string taskDescription; // 任务描述
     public PlayerTaskTypeEnum taskType; // 任务类型
+    public int designPointCost; // 分配任务所需的策划点数
+
+    [Header("任务分配")]
+    public int maxPlayerCount; // 任务可解取的最大玩家数量
+    public int setPlayerCount; // 设置的可分配的玩家数量
+    public int currentPlayerCount; // 当前已分配的玩家数量
+    public List<PlayerView> assignedPlayers; // 已分配的玩家列表
+
+    [Header("任务进度")]
     public int taskProgress; // 任务进度
     public int taskCostTime; // 任务所需时间，单位为回合数
 

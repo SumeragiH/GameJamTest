@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playerSystem : SingletonBaseWithoutMono<playerSystem>
+public class PlayerSystem : SingletonBaseWithoutMono<PlayerSystem>
 {
     //玩家列表，将同一类型的玩家放在一起，方便管理
     public Dictionary<PlayerTypeEnum,List<PlayerView>> playerDataDictionary;
 
-    public playerSystem()
+    public int MaxPlayers;//最大玩家数量（每种类型的玩家数量上限）
+
+    public PlayerSystem()
     {
         playerDataDictionary = new Dictionary<PlayerTypeEnum, List<PlayerView>>();
         // 初始化玩家数据字典，为每种玩家类型创建一个空列表
@@ -26,6 +28,19 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
     /// <param name="playerView"></param>
     public void AddPlayer(PlayerView playerView)
     {
+        if(playerView==null)
+        { 
+            Debug.LogError("尝试添加的玩家为空！");
+            return;
+        }
+
+        if (playerDataDictionary[playerView.GetPlayerData().playerType].Count >= MaxPlayers)
+        {
+            //TODO  
+            //弹窗提示或者直接将招募界面置灰，无法继续招募
+            Debug.LogError("玩家数量已达上限！");
+            return;
+        }
         if (playerDataDictionary.ContainsKey(playerView.GetPlayerData().playerType))
         {
             playerDataDictionary[playerView.GetPlayerData().playerType].Add(playerView);
@@ -67,6 +82,10 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
                     if (playerView.GetPlayerData().badMoodTurns > 4)
                     {
                         playerView.Dead();
+                        //删除玩家
+                        RemovePlayer(playerView);
+                        //TODO
+                        //更新UI，弹窗提示玩家死亡
                     }
                 }
 
