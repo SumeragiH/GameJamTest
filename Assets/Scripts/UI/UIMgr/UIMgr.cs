@@ -132,7 +132,7 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
     private void OnPlaceButtonClicked()
     {
         PlacableSelectPanel panel = ShowPanel<PlacableSelectPanel>();
-        panel.SetPosition(new Vector2(60, 140));
+        panel.SetPosition(new Vector2(60, 200));
     }
 
     public void ShowPlotDescPanel(GameObject gameObject, Vector3 mousePos)

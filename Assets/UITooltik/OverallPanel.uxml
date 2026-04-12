@@ -32,6 +32,6 @@
     <ui:VisualElement name="MessagePanel" style="flex-grow: 1; position: absolute; height: 122px; width: 279px; top: auto; left: 1px; background-color: rgba(135, 125, 125, 0.76); border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; bottom: 100px;">
         <ui:Label tabindex="-1" text="重要消息" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MessageText" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:Button text="结束回合" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndTurnButton" style="height: 57px; width: 112px; position: absolute; top: auto; left: auto; -unity-font-style: bold; right: 60px; bottom: 72px;" />
-    <ui:Button text="放置工具" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlaceButton" style="position: absolute; top: auto; left: auto; height: 28px; width: 75px; -unity-font-style: bold; right: 96px; bottom: 26px;" />
+    <ui:Button text="结束回合" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndTurnButton" style="height: 97px; width: 176px; position: absolute; top: auto; left: auto; -unity-font-style: bold; right: 35px; bottom: 86px; font-size: 20px;" />
+    <ui:Button text="放置工具" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlaceButton" style="position: absolute; top: auto; left: auto; height: 43px; width: 105px; -unity-font-style: bold; right: 96px; bottom: 20px; font-size: 16px;" />
 </ui:UXML>
