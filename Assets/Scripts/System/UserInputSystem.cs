@@ -79,11 +79,4 @@ public class UserInputSystem : MonoBehaviour
         }
 
     }
-
-
-    private void LeftClickPlot(GameObject plot)
-    {
-        GameObject Plot = plot;
-        Debug.Log("点击了地块：" + Plot.name);
-    }
 }

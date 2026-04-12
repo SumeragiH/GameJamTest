@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMouseAvailable: 1
-  DefaultObj: {fileID: 0}
+  DefaultObj: {fileID: 1833607489}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

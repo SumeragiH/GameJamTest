@@ -20,6 +20,10 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
         }
     }
 
+    /// <summary>
+    /// 添加玩家
+    /// </summary>
+    /// <param name="playerView"></param>
     public void AddPlayer(PlayerView playerView)
     {
         if (playerDataDictionary.ContainsKey(playerView.GetPlayerData().playerType))
@@ -31,6 +35,46 @@ public class playerSystem : SingletonBaseWithoutMono<playerSystem>
             Debug.LogError($"玩家类型 {playerView.GetPlayerData().playerType} 不存在于字典中！");
         }
     }
+
+    /// <summary>
+    /// 删除玩家
+    /// </summary>
+    /// <param name="playerView"></param>
+    public void RemovePlayer(PlayerView playerView)
+    {
+        if (playerDataDictionary.ContainsKey(playerView.GetPlayerData().playerType))
+        {
+            playerDataDictionary[playerView.GetPlayerData().playerType].Remove(playerView);
+        }
+        else
+        {
+            Debug.LogError($"玩家类型 {playerView.GetPlayerData().playerType} 不存在于字典中！");
+        }
+    }
+
+    public void PlayerNextTurn()
+    {
+        foreach (var playerList in playerDataDictionary.Values)
+        {
+            foreach (var playerView in playerList)
+            {
+                //得到每个玩家
+
+                //如果玩家心情值小于等于30，增加坏心情回合数，如果坏心情回合数大于4，玩家死亡
+                if (playerView.GetPlayerData().moodPoints <= 30)
+                {
+                    playerView.GetPlayerData().badMoodTurns += 1;
+                    if (playerView.GetPlayerData().badMoodTurns > 4)
+                    {
+                        playerView.Dead();
+                    }
+                }
+
+
+            }
+        }
+    }
+
 
     public List<PlayerView> GetPlayersByType(PlayerTypeEnum playerType)
     {

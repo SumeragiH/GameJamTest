@@ -224,11 +224,11 @@ public class PlayerView : MonoBehaviour
                 break;
         }
 
-        playerConfigData.ExperiencePoints += expReward;
-        playerConfigData.MoodPoints = Mathf.Min(100, playerConfigData.MoodPoints + moodReward);
+        playerConfigData.experiencePoints += expReward;
+        playerConfigData.moodPoints = Mathf.Min(100, playerConfigData.moodPoints + moodReward);
         playerConfigData.playerState = PlayerStateEnum.Idle;
 
-        Debug.Log($"[PlayerView] {playerConfigData.playerName} 当前状态 | 经验值: {playerConfigData.ExperiencePoints} | 心情: {playerConfigData.MoodPoints}");
+        Debug.Log($"[PlayerView] {playerConfigData.playerName} 当前状态 | 经验值: {playerConfigData.experiencePoints} | 心情: {playerConfigData.moodPoints}");
         // 通知系统任务完成
         //PlayerTaskSystem.Instance.CompleteTask(currentTask.taskID);
 
@@ -294,5 +294,13 @@ public class PlayerView : MonoBehaviour
     //        animator.SetBool("IsWorking", true);
     //    }
     //}
+    #endregion
+
+    #region
+    public void Dead()
+    {
+        // 销毁玩家对象
+        Destroy(gameObject);
+    }
     #endregion
 }
