@@ -208,6 +208,19 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
     public void StaffPlacingStatusEnd()
     {
+        // 取消地块高亮
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    plotList[y][x].HideHighlight();
+                }
+            }
+        }
+
+
         currentStatus = PlotManagerStatusEnum.Normal;
         placingStaffPrefab = null;
         EventCenter.Instance.EventTrigger("地块放置结束");
