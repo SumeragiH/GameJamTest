@@ -8,7 +8,5 @@ using UnityEngine;
 /// </summary>
 class GameControllSystem: SingletonBaseWithMono<GameControllSystem>
 {
-    [SerializeField] public int desingnPoint { get; private set; } = 0;
-
     // TODO
 }
