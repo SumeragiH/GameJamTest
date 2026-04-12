@@ -49,7 +49,7 @@ public class PlotDescPanel : BasePanel
             downDescText += $"{production.amount} {production.product.productName}\n";
         }
         
-        PlayerView playerView = playerSystem.Instance.GetPlayerByPosition(plot.x, plot.y);
+        PlayerView playerView = PlayerSystem.Instance.GetPlayerByPosition(plot.x, plot.y);
         PlayerConfigData playerData = playerView?.GetPlayerData();
         if (playerData != null)
         {
