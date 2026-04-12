@@ -4,6 +4,12 @@ using UnityEngine.Serialization;
 
 public abstract class PlacableView : MonoBehaviour
 {
+    [field: SerializeField]
+    public PlacableCategoryEnum category { get; private set; } = PlacableCategoryEnum.Building;
+
+    [field: SerializeField, Min(0)]
+    public int designPointCost { get; private set; } = 0;
+
     [field: SerializeField, FormerlySerializedAs("improvementName"), FormerlySerializedAs("specialRewardName")]
     public string viewName { get; private set; } = "";
 

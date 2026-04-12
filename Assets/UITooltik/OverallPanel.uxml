@@ -1,9 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/UIStlyes.uss?fileID=7433441132597879392&amp;guid=2c8bd73c687ab2847989018bee09d0b9&amp;type=3#UIStlyes" />
+    <ui:VisualElement name="TopPanel" style="flex-grow: 1; position: absolute; height: 34px; width: auto; top: 5px; left: 49px; flex-direction: row;">
+        <ui:VisualElement name="DesignPointTag" class="container top_container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="策划点：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="text top_label_text" style="-unity-text-align: upper-left; text-overflow: clip;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RoundTag" class="container top_container" style="flex-grow: 1; flex-direction: row;">
+            <ui:Label tabindex="-1" text="回合数：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RemainTimeTag" class="container top_container" style="flex-grow: 1; width: 170px;">
+            <ui:Label tabindex="-1" text="回合剩余时间：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" style="width: auto;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="TurnoverTag" class="container top_container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="流水：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="DailyActiveUserTag" class="container top_container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="日活：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="BuildingMeterialTag" class="container top_container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="建材：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="GrainTag" class="container top_container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="粮食：xxxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="UserTag" class="container top_container" style="flex-grow: 1; background-color: rgba(135, 125, 125, 0.76); width: 150px;">
+            <ui:Label tabindex="-1" text="活跃玩家：xxx" parse-escape-sequences="true" display-tooltip-when-elided="true" class="top_label_text" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="TaskPanel" style="flex-grow: 1; position: absolute; height: 44px; width: 173px; top: 127px; left: 0;">
+        <ui:Button text="任务列表" parse-escape-sequences="true" display-tooltip-when-elided="true" style="background-color: rgba(135, 125, 125, 0.76); -unity-font-style: bold;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="MessagePanel" style="flex-grow: 1; position: absolute; height: 122px; width: 279px; top: auto; left: 1px; background-color: rgba(135, 125, 125, 0.76); border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; bottom: 100px;">
+        <ui:Label tabindex="-1" text="重要消息" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MessageText" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
+    </ui:VisualElement>
+    <ui:Button text="结束回合" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndTurnButton" style="height: 57px; width: 112px; position: absolute; top: auto; left: auto; -unity-font-style: bold; right: 60px; bottom: 72px;" />
+    <ui:Button text="放置工具" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlaceButton" style="position: absolute; top: auto; left: auto; height: 28px; width: 75px; -unity-font-style: bold; right: 96px; bottom: 26px;" />
+</ui:UXML>

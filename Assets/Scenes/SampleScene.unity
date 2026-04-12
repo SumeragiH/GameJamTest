@@ -1447,7 +1447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1266109653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: e855115898bd23141917a5b470c592d6,
     type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 99
 --- !u!4 &1912175143
 Transform:
   m_ObjectHideFlags: 0

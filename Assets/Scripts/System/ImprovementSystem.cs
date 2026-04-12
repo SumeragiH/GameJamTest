@@ -8,8 +8,14 @@ class ImprovementSystem : SingletonBaseWithMono<ImprovementSystem>
 {
     [field: SerializeField] public List<ImprovementView> improvementPrefabList { get; private set; } = new(); // 改良列表
 
-    public void AddImprovement(ImprovementView improvementPrefab, int x, int y)
+    public bool AddImprovement(ImprovementView improvementPrefab, int x, int y)
     {
+        if (improvementPrefab == null)
+        {
+            Debug.LogError("[ImprovementSystem] improvementPrefab 为空，无法放置");
+            return false;
+        }
+
         PlotView plotView = PlotManageSystem.Instance.GetPlotView(x, y);
         if (plotView != null)
         {
@@ -19,7 +25,11 @@ class ImprovementSystem : SingletonBaseWithMono<ImprovementSystem>
             improvement.transform.parent = plotView.transform;
             improvement.transform.localPosition = Vector3.zero;
             improvement.transform.localRotation = Quaternion.identity;
+            return true;
         }
+
+        Debug.LogError($"[ImprovementSystem] 目标地块不存在: ({x}, {y})");
+        return false;
     }
 
     /// <summary>
