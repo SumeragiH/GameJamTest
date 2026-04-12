@@ -98,7 +98,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         // 订阅事件
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
-        EventCenter.Instance.AddListener<PlacableView>("地块放置结束", OnStaffPlacingStatusEntered);
+        EventCenter.Instance.AddListener<PlacableView>("地块放置开始", OnStaffPlacingStatusEntered);
 
 
         // 测试代码 (temporary)

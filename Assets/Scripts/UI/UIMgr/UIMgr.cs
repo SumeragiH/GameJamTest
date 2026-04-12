@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class UIMgr : SingletonBaseWithMono<UIMgr>
 {
@@ -10,6 +11,7 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
     private Dictionary<string, BasePanel> panelDic = new Dictionary<string, BasePanel>();
 
     [SerializeField] private Canvas canvas;//获取UI组件父对象，这样在实例化面板对象时就可以将它设置为这个父对象的子对象，就可以在场景中看到这个面板了
+    private Button placeButton;
 
     //获取面板的方法，供外部调用
     public T GetPanel<T>() where T : BasePanel
@@ -33,12 +35,18 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
         }
         EventCenter.Instance.AddListener<GameObject>("鼠标悬停", OnHoverChanged);
         EventCenter.Instance.AddListener<GameObject, Vector3>("鼠标连续悬停", ShowPlotDescPanel);
+        BindPlaceButton();
     }
 
     private void OnDestroy()
     {
         EventCenter.Instance.RemoveListener<GameObject>("鼠标悬停", OnHoverChanged);
         EventCenter.Instance.RemoveListener<GameObject, Vector3>("鼠标连续悬停", ShowPlotDescPanel);
+        if (placeButton != null)
+        {
+            placeButton.clicked -= OnPlaceButtonClicked;
+            placeButton = null;
+        }
     }
 
     /// <summary>
@@ -98,6 +106,34 @@ public class UIMgr : SingletonBaseWithMono<UIMgr>
     }
 
 #region 具体Panel显示的函数
+
+    private void BindPlaceButton()
+    {
+        UIDocument[] uiDocuments = FindObjectsOfType<UIDocument>(true);
+        foreach (UIDocument uiDocument in uiDocuments)
+        {
+            if (uiDocument == null || uiDocument.rootVisualElement == null)
+            {
+                continue;
+            }
+
+            Button candidate = uiDocument.rootVisualElement.Q<Button>("PlaceButton");
+            if (candidate == null)
+            {
+                continue;
+            }
+
+            placeButton = candidate;
+            placeButton.clicked += OnPlaceButtonClicked;
+            return;
+        }
+    }
+
+    private void OnPlaceButtonClicked()
+    {
+        PlacableSelectPanel panel = ShowPanel<PlacableSelectPanel>();
+        panel.SetPosition(new Vector2(60, 140));
+    }
 
     public void ShowPlotDescPanel(GameObject gameObject, Vector3 mousePos)
     {

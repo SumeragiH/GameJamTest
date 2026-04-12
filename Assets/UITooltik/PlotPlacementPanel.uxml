@@ -1,2 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="PlacementPanel" style="position: absolute; width: 380px; height: 420px; right: 24px; bottom: 64px; background-color: rgba(46, 46, 46, 0.92); border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <ui:Label text="放置类型选择" style="font-size: 18px; -unity-font-style: bold; color: rgb(240, 240, 240);" />
+            <ui:Button name="CloseButton" text="关闭" style="width: 56px; height: 24px;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="PlacableList" style="flex-grow: 1;" />
+    </ui:VisualElement>
 </ui:UXML>
