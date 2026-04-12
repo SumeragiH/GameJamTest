@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 206626308673888572}
   - component: {fileID: 2363862798575076301}
   m_Layer: 0
-  m_Name: TestImprovement
+  m_Name: HouseImprovement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,9 +27,9 @@ Transform:
   m_GameObject: {fileID: 1493519536705446007}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 1.677, y: 0, z: 8.833}
+  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -74,9 +74,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa,
-    type: 3}
-  m_Color: {r: 0.41451588, g: 0.764151, b: 0.7394646, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 0a97888e274e26e4ea590853570b1d5f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -98,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1983563a68d1b23458e89e7e0f8fbc5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  improvementName: "\u6D4B\u8BD5\u6539\u826F"
-  description: "\u7528\u4E8E\u6D4B\u8BD5\u7684\u6539\u826F"
+  <improvementName>k__BackingField: 
+  <description>k__BackingField: 
   canBuildOn: 00000000
   grainProductData: {fileID: 11400000, guid: 22584979d5397aa4da8516bcd9badf13, type: 2}

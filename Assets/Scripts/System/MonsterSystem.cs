@@ -1,37 +1,77 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
-/// 怪物系统，负责管理怪物的生成、行为和交互等逻辑
+/// 怪物系统：统一驱动刷新点刷新与战斗结算
 /// </summary>
-class MonsterSystem : SingletonBaseWithMono<MonsterSystem>
+public class MonsterSystem : SingletonBaseWithMono<MonsterSystem>
 {
-    [field: SerializeField] public List<MonsterSpawnerView> monsterPrefabs { get; private set; } = new List<MonsterSpawnerView>(); // 怪物预制体列表，可以在编辑器中设置
-    private List<MonsterSpawnerView> monsters = new List<MonsterSpawnerView>();
+    private readonly HashSet<MonsterSpawnerView> spawners = new HashSet<MonsterSpawnerView>();
 
-
-    void Start()
+    private void Start()
     {
-        EventCenter.Instance.AddListener<MonsterSpawnerView>("怪物死亡", OnMonsterDeath);
+        MonsterSpawnerView[] existingSpawners = FindObjectsOfType<MonsterSpawnerView>();
+        foreach (MonsterSpawnerView spawner in existingSpawners)
+        {
+            RegisterSpawner(spawner);
+        }
     }
 
-    public List<MonsterSpawnerView> GetMonstersPrefab()
+    private void Update()
     {
-        return monsterPrefabs;
+        foreach (MonsterSpawnerView spawner in spawners)
+        {
+            if (spawner != null)
+            {
+                spawner.TickRefresh(Time.deltaTime);
+            }
+        }
     }
 
-    public void AddMonster(MonsterSpawnerView monster, PlotView plotView)
+    public void RegisterSpawner(MonsterSpawnerView spawner)
     {
-        monsters.Add(monster);
+        if (spawner == null)
+        {
+            return;
+        }
+
+        spawners.Add(spawner);
     }
 
-    public void OnMonsterDeath(MonsterSpawnerView monster)
+    public void UnregisterSpawner(MonsterSpawnerView spawner)
     {
-        // TODO: 可能的游戏逻辑？
-        Debug.Log("怪物死亡: " + monster.monsterName);
-        monsters.Remove(monster);
-        Destroy(monster.gameObject);
+        if (spawner == null)
+        {
+            return;
+        }
+
+        spawners.Remove(spawner);
+    }
+
+    public bool TryFightOnPlot(PlotView plot, PlayerView fighter, out MonsterSpawnerView spawner, out MonsterView monster)
+    {
+        spawner = null;
+        monster = null;
+
+        if (plot == null || plot.monsterSpawner == null)
+        {
+            return false;
+        }
+
+        MonsterSpawnerView item = plot.monsterSpawner;
+        if (item == null || !item.CanFight())
+        {
+            return false;
+        }
+
+        if (!item.TryConsumeMonsterForFight(out monster))
+        {
+            return false;
+        }
+
+        spawner = item;
+        EventCenter.Instance.EventTrigger<MonsterSpawnerView, MonsterView>("怪物被击败", spawner, monster);
+        Debug.Log($"[MonsterSystem] {fighter?.name ?? "Unknown"} 在 ({plot.x},{plot.y}) 击败了 {monster.monsterName}，剩余 {spawner.monsterCount}/{spawner.maxMonsterCount}");
+        return true;
     }
 }

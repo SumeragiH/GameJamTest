@@ -11,6 +11,7 @@ public class TotalProductionData
     public int designPoint = 0; // 策划点
     public List<ProductionData> productionList = new List<ProductionData>(); // 额外产出列表
 
+    public TotalProductionData() { }
     public TotalProductionData(int designPoint, List<ProductionData> productionList)
     {
         this.designPoint = designPoint;

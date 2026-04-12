@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class TreasureBoxView : MonoBehaviour
+public class TreasureBoxView : PlacableView
 {
     // 本宝箱的产出列表
     [SerializeField] private TotalProductionData productions;

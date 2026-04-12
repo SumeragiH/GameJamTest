@@ -208,9 +208,16 @@ public class PlayerView : MonoBehaviour
         switch (currentTask.taskData.taskType)
         {
             case PlayerTaskTypeEnum.Fight: // TODO: 与战斗系统对接
-                expReward = 10;
-                moodReward = 15;
-                Debug.Log($"[PlayerView] 战斗任务完成! 奖励: +{expReward}经验 +{moodReward}心情");
+                if (MonsterSystem.Instance.TryFightOnPlot(currentPlot, this, out MonsterSpawnerView spawner, out MonsterView monster))
+                {
+                    expReward = 10;
+                    moodReward = 15;
+                    Debug.Log($"[PlayerView] 战斗任务完成，击败 {monster.monsterName}，奖励: +{expReward}经验 +{moodReward}心情");
+                }
+                else
+                {
+                    Debug.LogWarning("[PlayerView] 当前地块没有可战斗怪物，战斗未发生");
+                }
                 break;
             case PlayerTaskTypeEnum.Explore:
                 expReward = 12;
