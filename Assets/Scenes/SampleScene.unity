@@ -647,13 +647,13 @@ MonoBehaviour:
   mapPlotConfigData: {fileID: 11400000, guid: 2d1aaf282f7547342a8325670d52e74b, type: 2}
   plotPrefabs:
   - plotType: 0
-    prefab: {fileID: 9191975261188422714, guid: 4f04c78dc51b6da4b8b66063f312bfbf,
+    prefab: {fileID: 9191975261188422714, guid: 67fffc3d453f2e7428a9dea6f025a484,
       type: 3}
   - plotType: 1
-    prefab: {fileID: 5349115571296489479, guid: 43223613e9e36f64fbfcc98761b5b805,
+    prefab: {fileID: 5349115571296489479, guid: fe74171244134f146a41b396208b0f31,
       type: 3}
   - plotType: 2
-    prefab: {fileID: 7363115273091248720, guid: 73c6a95e5d8f81147be37eb317657176,
+    prefab: {fileID: 7363115273091248720, guid: 4bac27226bfb26c479ceb07f04c966d1,
       type: 3}
   - plotType: 3
     prefab: {fileID: 7806062766737376120, guid: a8b5b37b1cb95f2499e8f179099f7f60,
@@ -1282,6 +1282,37 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!1 &1833607489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1833607490}
+  m_Layer: 0
+  m_Name: DefaultObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1833607490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833607489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.117975, y: 5.718659, z: -28.552177}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1900978628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,7 +1389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <improvementPrefabList>k__BackingField:
-  - {fileID: 2363862798575076301, guid: 0bcb9b27c3505dc4d83a863db12a2a49, type: 3}
+  - {fileID: 2363862798575076301, guid: c887b83b21caf2e4d8815a890d4c5df1, type: 3}
 --- !u!1 &2004784708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,3 +1444,4 @@ SceneRoots:
   - {fileID: 1084882087}
   - {fileID: 427491627}
   - {fileID: 1038002338}
+  - {fileID: 1833607490}
