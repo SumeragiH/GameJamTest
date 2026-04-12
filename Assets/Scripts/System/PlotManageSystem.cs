@@ -40,6 +40,10 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
     [SerializeField] private float plotWidth = 1f; // 地块宽度
     [SerializeField] private float plotHeight = 1f; // 地块高度
 
+    // 是否正在放置状态
+    private PlotManagerStatusEnum currentStatus = PlotManagerStatusEnum.Normal;
+    private GameObject placingStaffPrefab = null; // 当前放置的单元格预制体
+
     void Start()
     {
         colNum = mapPlotConfigData.GetColNum();
@@ -94,6 +98,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         // 订阅事件
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
+        EventCenter.Instance.AddListener<GameObject>("地块放置结束", OnStaffPlacingStatusEntered);
 
 
         // 测试代码 (temporary)
@@ -185,6 +190,26 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
     }
 
+#region 地块放置相关
+
+    public void OnStaffPlacingStatusEntered(GameObject staffPrefab)
+    {
+        currentStatus = PlotManagerStatusEnum.PlacingStaff;
+        placingStaffPrefab = staffPrefab;
+
+    }
+
+    public void StaffPlacingStatusEnd()
+    {
+        currentStatus = PlotManagerStatusEnum.Normal;
+        placingStaffPrefab = null;
+        EventCenter.Instance.EventTrigger("地块放置结束");
+    }
+
+#endregion
+
+
+#region 地块基础操作
 
     /// <summary>
     /// 得到地块的坐标为(x,y)的地块对象，坐标从0开始计数，x表示横坐标，y表示纵坐标。超出地图范围的坐标返回null
@@ -234,6 +259,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
     {
         return x >= 0 && x < colNum && y >= 0 && y < rowNum;
     }
+#endregion
 
     #region 交换地块位置
     /// <summary>

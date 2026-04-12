@@ -20,7 +20,7 @@ public class PlotView : MonoBehaviour
     public List<ImprovementView> improvements = new();
 
     // 怪物
-    public List<MonsterSpawnerView> monsters = new(); // 地块怪物
+    public MonsterSpawnerView monsterSpawner; // 地块唯一怪物刷新点
 
     // 宝箱
     public TreasureBoxView treasureBox = null;

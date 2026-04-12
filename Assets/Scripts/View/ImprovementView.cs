@@ -1,26 +1,16 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 /// <summary>
 /// 改良，即策划md里面的“建筑“
 /// 具体的奖励逻辑在自类中写
 /// </summary>
-public abstract class ImprovementView : MonoBehaviour
+public abstract class ImprovementView : PlacableView
 {
     protected PlotView currentPlot; // 所在地块
     public abstract TotalProductionData ImprovementProduct();
-    [field: SerializeField] public string improvementName { get; private set; } = "";
-    [field: SerializeField] public string description { get; private set; } = "";
-
-    [SerializeField] protected List<PlotTypeEnum> canBuildOn = new(); // 可建造的地块类型列表
 
     public void SetImprovementView(PlotView plotView)
     {
         currentPlot = plotView;
-    }
-
-    public bool CanBuildOn(PlotView plotView)
-    {
-        return canBuildOn.Contains(plotView.plotType);
     }
 }

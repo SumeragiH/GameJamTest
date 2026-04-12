@@ -1,15 +1,12 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 /// <summary>
 /// 特殊奖励，即策划md里面的“奖励“
 /// 具体的奖励逻辑在子类中写
 /// </summary>
-public abstract class SpecialRewardView : MonoBehaviour
+public abstract class SpecialRewardView : PlacableView
 {
     protected PlotView currentPlot; // 所在地块
-    [field: SerializeField] public string specialRewardName { get; private set; } = "";
-    [field: SerializeField] public string description { get; private set; } = "";
     public abstract TotalProductionData ImprovementProduct();
 
     public void SetSpecialRewardView(PlotView plotView)

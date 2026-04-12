@@ -28,15 +28,15 @@ public class PlotDescPanel : BasePanel
         upDescText += $"{plot.plotType.GetDescription()}\n";
         foreach (var improvement in plot.improvements)
         {
-            upDescText += $"改良：{improvement.improvementName}\n";
+            upDescText += $"改良：{improvement.viewName}\n";
         }
-        foreach (var monster in plot.monsters)
+        if (plot.monsterSpawner != null && plot.monsterSpawner.monsterCount > 0)
         {
-            upDescText += $"怪物：{monster.monsterName}\n";
+            upDescText += $"怪物：{plot.monsterSpawner.monsterName} x{plot.monsterSpawner.monsterCount}\n";
         }
         foreach (var specialReward in plot.specialRewards)
         {
-            upDescText += $"特殊奖励：{specialReward.specialRewardName}\n";
+            upDescText += $"特殊奖励：{specialReward.viewName}\n";
         }
         if (plot.treasureBox != null)
         {
