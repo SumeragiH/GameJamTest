@@ -104,7 +104,33 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         Debug.Log("测试: 打印地块产出");
         TotalProductionData totalProduction = PlotsProduct();
         Debug.Log(totalProduction.ToString());
+
     }
+
+    // 测试变量与代码
+    // private bool isFirstUpdate = true;
+    // void Update()
+    // {
+    //     if (isFirstUpdate)
+    //     {
+    //         for (int y = 0; y < rowNum; y++)
+    //         {
+    //             for (int x = 0; x < colNum; x++)
+    //             {
+    //                 // 随机放置与不可放置
+    //                 if (Random.value < 0.5f)
+    //                 {
+    //                     plotList[y][x]?.ShowPlacableHighlight();
+    //                 }
+    //                 else
+    //                 {
+    //                     plotList[y][x]?.ShowUnplacableHighlight();
+    //                 }
+    //             }
+    //         }
+    //         isFirstUpdate = false;
+    //     }
+    // }
 
     public TotalProductionData PlotsProduct()
     {

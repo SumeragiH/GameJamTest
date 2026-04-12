@@ -32,8 +32,18 @@ public class PlotView : MonoBehaviour
     private Material mat;
     private SpriteRenderer spriteRenderer;
 
+
+    // 网格高亮颜色
+    private Color placableColor;
+    private Color unplacableColor;
+    [SerializeField] private SpriteRenderer coverColorRenderer; // 用于显示地块可放置状态的覆盖层SpriteRenderer
+
     void Start()
     {
+        // 从配置文件获取高亮颜色
+        placableColor = PlotConfig.Instance.placableColor;
+        unplacableColor = PlotConfig.Instance.unplacableColor;
+
         // 获取SpriteRenderer（一次性）
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
@@ -99,6 +109,41 @@ public class PlotView : MonoBehaviour
     }
 
     #region 高亮显示地块
+
+    /// <summary>
+    /// 显示可放置高亮（绿色覆盖层）
+    /// </summary>
+    public void ShowPlacableHighlight()
+    {
+        if (coverColorRenderer != null)
+        {
+            coverColorRenderer.color = placableColor;
+            coverColorRenderer.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// 显示不可放置高亮（红色覆盖层）
+    /// </summary>
+    public void ShowUnplacableHighlight()
+    {
+        if (coverColorRenderer != null)
+        {
+            coverColorRenderer.color = unplacableColor;
+            coverColorRenderer.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// 隐藏高亮
+    /// </summary>
+    public void HideHighlight()
+    {
+        if (coverColorRenderer != null)
+        {
+            coverColorRenderer.enabled = false;
+        }
+    }
 
     /// <summary>
     /// 鼠标悬停时高亮（蓝色边框）
