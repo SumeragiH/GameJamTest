@@ -61,6 +61,50 @@ public class TotalProductionData
         return new TotalProductionData(sumDesignPoint, combinedList);
     }
 
+    #region 资源操作
+    /// <summary>
+    /// 得到策划点数量
+    /// </summary>
+    /// <returns></returns>
+    public int GetDesignPoint() => designPoint;
+    /// <summary>
+    /// 修改策划点数量，delta可以为正（增加）或负（减少），如果减少后数量小于0则置为0
+    /// </summary>
+    /// <param name="delta">数量变化值</param>
+    public void ChangeDesignPoint(int delta)
+    {
+        designPoint += delta;
+        if (designPoint < 0) 
+            designPoint = 0;
+    }
+    /// <summary>
+    /// 得到产出列表
+    /// </summary>
+    /// <returns></returns>
+    public List<ProductionData> GetProductionList() => productionList;
+
+    /// <summary>
+    /// 修改产出数量，delta可以为正（增加）或负（减少），如果减少后数量小于0则置为0
+    /// </summary>
+    /// <param name="productName">产出的名称</param>
+    /// <param name="delta">数量变化值</param>
+    public void ChangeProductionAmount(string productName, int delta)
+    {
+        if (string.IsNullOrEmpty(productName))
+            return;
+        ProductionData existing = productionList.FirstOrDefault(p => 
+            p != null && 
+            p.product != null && 
+            ((p.product.productName == productName) || (p.product.name == productName)));
+        if (existing != null)
+        {
+            existing.amount += delta;
+            if (existing.amount < 0)
+                existing.amount = 0;
+        }
+    }
+    #endregion
+
     public override string ToString()
     {
         string prodDetails = productionList == null ? "null" :

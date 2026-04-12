@@ -56,6 +56,9 @@ public class PlayerTaskSystem : SingletonBaseWithMono<PlayerTaskSystem>
 
     public void AssignTask(PlayerTaskView taskData, PlotView targetPlot)
     {
+        //消耗策划点数来分配任务
+        //TODO
+
         PlayerTaskTypeEnum taskType =  taskData.taskData.taskType;
         PlayerTypeEnum playerType;//根据任务类型确定玩家类型
         switch (taskType)
@@ -82,7 +85,28 @@ public class PlayerTaskSystem : SingletonBaseWithMono<PlayerTaskSystem>
             Debug.LogWarning("No players available for this task");
             return;
         }
-        foreach(PlayerView player in players)
+        //得到任务所需要的玩家数量
+        List<PlayerView> assignablePlayers = new List<PlayerView>();//可分配任务的玩家列表
+        for(int i=0;i<players.Count;i++)
+        {
+            if(players[i].IsBusy())//如果玩家忙碌
+            {
+                continue;
+            }
+            else
+            {
+                assignablePlayers.Add(players[i]);//将可分配任务的玩家添加到列表中
+            }
+        }
+        if(assignablePlayers.Count == 0||assignablePlayers.Count < taskData.taskData.PlayerCount)
+        {
+            //弹窗，提示没有足够可分配任务的玩家
+            Debug.LogWarning("No assignable players available for this task");
+            return;
+        }
+
+        //分配任务给玩家
+        foreach (PlayerView player in assignablePlayers)
         {
             if(player.IsBusy())//如果玩家忙碌
             {
@@ -91,6 +115,8 @@ public class PlayerTaskSystem : SingletonBaseWithMono<PlayerTaskSystem>
             else
             {
                 player.AssignTask(taskData);//分配任务
+                //如果没有达到任务允许的最大玩家数量，则继续分配任务
+                //TODO
                 AddTask(taskData);
             }
         }
