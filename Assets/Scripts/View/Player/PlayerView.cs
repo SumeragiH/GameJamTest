@@ -89,7 +89,7 @@ public class PlayerView : MonoBehaviour
 
     /// <summary>
     /// 接收任务分配
-    /// 这个方法由PlayerManageSystem调用
+    /// 这个方法由PlayerTaskSystem调用
     /// </summary>
     public void AssignTask(PlayerTaskView task)
     {
