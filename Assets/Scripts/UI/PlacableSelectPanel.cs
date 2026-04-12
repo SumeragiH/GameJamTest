@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 public class PlacableSelectPanel : BasePanel
 {
     [SerializeField] private UIDocument uiDocument;
-    [SerializeField] private List<PlacableView> placablePrefabList = new();
     private VisualElement placablePanelRoot;
 
     private ScrollView placableList;
@@ -70,6 +69,7 @@ public class PlacableSelectPanel : BasePanel
         }
 
         placableList.Clear();
+        List<PlacableView> placablePrefabList = CollectPlacablePrefabs();
 
         Dictionary<PlacableCategoryEnum, List<PlacableView>> grouped = new();
         foreach (PlacableCategoryEnum category in CategoryOrder)
@@ -119,6 +119,95 @@ public class PlacableSelectPanel : BasePanel
                 button.style.marginBottom = 4;
                 placableList.Add(button);
             }
+        }
+    }
+
+    private List<PlacableView> CollectPlacablePrefabs()
+    {
+        List<PlacableView> result = new();
+        HashSet<PlacableView> deduplicateSet = new();
+
+        AppendPlacables(result, deduplicateSet, ImprovementSystem.Instance.GetAllImprovements());
+        AppendPlacables(result, deduplicateSet, MonsterSystem.Instance.GetAllMonsterSpawners());
+        AppendPlacables(result, deduplicateSet, TreasureBoxSystem.Instance.GetAllTreasureBoxes());
+        AppendPlacables(result, deduplicateSet, SpecialRewardSystem.Instance.GetAllSpecialRewards());
+
+        return result;
+    }
+
+    private void AppendPlacables(List<PlacableView> target, HashSet<PlacableView> deduplicateSet, List<ImprovementView> source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        foreach (ImprovementView item in source)
+        {
+            if (item == null || deduplicateSet.Contains(item))
+            {
+                continue;
+            }
+
+            deduplicateSet.Add(item);
+            target.Add(item);
+        }
+    }
+
+    private void AppendPlacables(List<PlacableView> target, HashSet<PlacableView> deduplicateSet, List<MonsterSpawnerView> source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        foreach (MonsterSpawnerView item in source)
+        {
+            if (item == null || deduplicateSet.Contains(item))
+            {
+                continue;
+            }
+
+            deduplicateSet.Add(item);
+            target.Add(item);
+        }
+    }
+
+    private void AppendPlacables(List<PlacableView> target, HashSet<PlacableView> deduplicateSet, List<TreasureBoxView> source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        foreach (TreasureBoxView item in source)
+        {
+            if (item == null || deduplicateSet.Contains(item))
+            {
+                continue;
+            }
+
+            deduplicateSet.Add(item);
+            target.Add(item);
+        }
+    }
+
+    private void AppendPlacables(List<PlacableView> target, HashSet<PlacableView> deduplicateSet, List<SpecialRewardView> source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        foreach (SpecialRewardView item in source)
+        {
+            if (item == null || deduplicateSet.Contains(item))
+            {
+                continue;
+            }
+
+            deduplicateSet.Add(item);
+            target.Add(item);
         }
     }
 

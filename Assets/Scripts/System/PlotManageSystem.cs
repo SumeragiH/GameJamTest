@@ -99,6 +99,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
         EventCenter.Instance.AddListener<PlacableView>("地块放置开始", OnStaffPlacingStatusEntered);
+        EventCenter.Instance.AddListener<GameObject>("左键点击", OnPlotClicked);
 
 
         // 测试代码 (temporary)
@@ -110,6 +111,14 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         TotalProductionData totalProduction = PlotsProduct();
         Debug.Log(totalProduction.ToString());
 
+    }
+
+    private void OnDestroy()
+    {
+        EventCenter.Instance.RemoveListener<EventView>("事件生效", OnEventApplied);
+        EventCenter.Instance.RemoveListener<EventView>("事件结束", OnEventResolved);
+        EventCenter.Instance.RemoveListener<PlacableView>("地块放置开始", OnStaffPlacingStatusEntered);
+        EventCenter.Instance.RemoveListener<GameObject>("左键点击", OnPlotClicked);
     }
 
     // 测试变量与代码
@@ -181,6 +190,12 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
     public void OnStaffPlacingStatusEntered(PlacableView staffPrefab)
     {
+        if (staffPrefab == null)
+        {
+            Debug.LogError("[PlotManageSystem] 无法进入放置状态：staffPrefab 为空");
+            return;
+        }
+
         currentStatus = PlotManagerStatusEnum.PlacingStaff;
         placingStaffPrefab = staffPrefab;
 
@@ -204,6 +219,69 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         }
 
 
+    }
+
+    private void OnPlotClicked(GameObject clickedObject)
+    {
+        if (currentStatus != PlotManagerStatusEnum.PlacingStaff || placingStaffPrefab == null)
+        {
+            return;
+        }
+
+        if (clickedObject == null)
+        {
+            return;
+        }
+
+        PlotView plotView = clickedObject.GetComponent<PlotView>();
+        if (plotView == null)
+        {
+            return;
+        }
+
+        if (!placingStaffPrefab.CanBuildOn(plotView))
+        {
+            Debug.Log($"[PlotManageSystem] 地块 ({plotView.x}, {plotView.y}) 不满足放置条件。");
+            return;
+        }
+
+        if (placingStaffPrefab is ImprovementView improvementPrefab)
+        {
+            if (ImprovementSystem.Instance.AddImprovement(improvementPrefab, plotView.x, plotView.y))
+            {
+                StaffPlacingStatusEnd();
+            }
+            return;
+        }
+
+        if (placingStaffPrefab is MonsterSpawnerView monsterSpawnerPrefab)
+        {
+            if (MonsterSystem.Instance.AddMonsterSpawner(monsterSpawnerPrefab, plotView.x, plotView.y))
+            {
+                StaffPlacingStatusEnd();
+            }
+            return;
+        }
+
+        if (placingStaffPrefab is TreasureBoxView treasureBoxPrefab)
+        {
+            if (TreasureBoxSystem.Instance.AddTreasureBox(treasureBoxPrefab, plotView.x, plotView.y))
+            {
+                StaffPlacingStatusEnd();
+            }
+            return;
+        }
+
+        if (placingStaffPrefab is SpecialRewardView specialRewardPrefab)
+        {
+            if (SpecialRewardSystem.Instance.AddSpecialReward(specialRewardPrefab, plotView.x, plotView.y))
+            {
+                StaffPlacingStatusEnd();
+            }
+            return;
+        }
+
+        Debug.LogWarning($"[PlotManageSystem] 放置类型 {placingStaffPrefab.GetType().Name} 暂不支持。");
     }
 
     public void StaffPlacingStatusEnd()

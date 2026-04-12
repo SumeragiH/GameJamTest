@@ -65,5 +65,3 @@ MonoBehaviour:
   canvasGroup: {fileID: 0}
   alphaChangeSpeed: 10
   uiDocument: {fileID: 4506122422094950985}
-  placablePrefabList:
-  - {fileID: 2363862798575076301, guid: c887b83b21caf2e4d8815a890d4c5df1, type: 3}
