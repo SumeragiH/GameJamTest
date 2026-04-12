@@ -20,7 +20,7 @@ public class PlotView : MonoBehaviour
     public List<ImprovementView> improvements = new();
 
     // 怪物
-    public List<MonsterView> monsters = new();
+    public List<MonsterSpawnerView> monsters = new(); // 地块怪物
 
     // 宝箱
     public TreasureBoxView treasureBox = null;
@@ -105,7 +105,7 @@ public class PlotView : MonoBehaviour
     /// </summary>
     public void HighLightPlot(GameObject plot)
     {
-        if(plot == null || plot.GetComponent<PlotView>()==null)
+        if(plot == null)
         {
             return;
         }
