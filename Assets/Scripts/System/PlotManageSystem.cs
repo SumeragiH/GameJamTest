@@ -42,7 +42,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
     // 是否正在放置状态
     private PlotManagerStatusEnum currentStatus = PlotManagerStatusEnum.Normal;
-    private GameObject placingStaffPrefab = null; // 当前放置的单元格预制体
+    private PlacableView placingStaffPrefab = null; // 当前放置的单元格预制体
 
     void Start()
     {
@@ -98,7 +98,7 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
         // 订阅事件
         EventCenter.Instance.AddListener<EventView>("事件生效", OnEventApplied);
         EventCenter.Instance.AddListener<EventView>("事件结束", OnEventResolved);
-        EventCenter.Instance.AddListener<GameObject>("地块放置结束", OnStaffPlacingStatusEntered);
+        EventCenter.Instance.AddListener<PlacableView>("地块放置结束", OnStaffPlacingStatusEntered);
 
 
         // 测试代码 (temporary)
@@ -114,25 +114,12 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
     // 测试变量与代码
     // private bool isFirstUpdate = true;
+    // [SerializeField] private PlacableView testPlacablePrefab = null;
     // void Update()
     // {
     //     if (isFirstUpdate)
     //     {
-    //         for (int y = 0; y < rowNum; y++)
-    //         {
-    //             for (int x = 0; x < colNum; x++)
-    //             {
-    //                 // 随机放置与不可放置
-    //                 if (Random.value < 0.5f)
-    //                 {
-    //                     plotList[y][x]?.ShowPlacableHighlight();
-    //                 }
-    //                 else
-    //                 {
-    //                     plotList[y][x]?.ShowUnplacableHighlight();
-    //                 }
-    //             }
-    //         }
+    //         OnStaffPlacingStatusEntered(testPlacablePrefab);
     //         isFirstUpdate = false;
     //     }
     // }
@@ -192,10 +179,30 @@ public class PlotManageSystem : SingletonBaseWithMono<PlotManageSystem>
 
 #region 地块放置相关
 
-    public void OnStaffPlacingStatusEntered(GameObject staffPrefab)
+    public void OnStaffPlacingStatusEntered(PlacableView staffPrefab)
     {
         currentStatus = PlotManagerStatusEnum.PlacingStaff;
         placingStaffPrefab = staffPrefab;
+
+        // 设置地块高亮
+        for (int y = 0; y < rowNum; y++)
+        {
+            for (int x = 0; x < colNum; x++)
+            {
+                if (plotList[y][x] != null)
+                {
+                    if (placingStaffPrefab.CanBuildOn(plotList[y][x]))
+                    {
+                        plotList[y][x].ShowPlacableHighlight();
+                    }
+                    else
+                    {
+                        plotList[y][x].ShowUnplacableHighlight();
+                    }
+                }
+            }
+        }
+
 
     }
 

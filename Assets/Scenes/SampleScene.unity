@@ -696,6 +696,8 @@ MonoBehaviour:
   plotRotation: {x: 0, y: 0, z: 0, w: 1}
   plotWidth: 0.9
   plotHeight: 0.8
+  testPlacablePrefab: {fileID: 2363862798575076301, guid: c887b83b21caf2e4d8815a890d4c5df1,
+    type: 3}
 --- !u!1001 &478399766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1322,8 +1324,10 @@ MonoBehaviour:
   playerAtk: 100
   playerDef: 100
   playerState: 0
-  MoodPoints: 70
-  ExperiencePoints: 0
+  moodPoints: 0
+  experiencePoints: 0
+  requiredExperiencePoints: 0
+  badMoodTurns: 0
   moveSpeed: 2
   playerIcon: {fileID: 0}
 --- !u!1 &1084882086
