@@ -4,6 +4,56 @@ using UnityEngine;
 
 public class PlayerTaskSystem : SingletonBaseWithMono<PlayerTaskSystem>
 {
+    public List<PlayerTaskView> tasks = new List<PlayerTaskView>();//玩家任务列表 
+    public List<PlayerTaskView> completedTasks = new List<PlayerTaskView>();//已完成的玩家任务列表
+    public void AddTask(PlayerTaskView taskData)
+    {
+        tasks.Add(taskData);
+    }
+
+    public void AddCompletedTask(PlayerTaskView taskData)
+    {
+        //如果任务完成，将其从任务列表中移除，并添加到已完成的任务列表中
+        foreach (var item in tasks)
+        {
+            if (item == taskData)
+            {
+                RemoveTask(taskData);
+            }
+        }
+
+        completedTasks.Add(taskData);
+    }
+    public void RemoveTask(PlayerTaskView taskData)
+    {
+        tasks.Remove(taskData);
+    }
+
+    public void RemoveCompletedTask(PlayerTaskView taskData)
+    {
+        completedTasks.Remove(taskData);
+    }
+
+    public void ClearCompletedTasks()
+    {
+        completedTasks.Clear();
+    }
+
+    /// <summary>
+    /// 切换回合时，更新任务状态，减少任务剩余时间，如果任务完成则将其添加到已完成的任务列表中
+    /// </summary>
+    public void TaskNextTurn()
+    {
+        foreach (var task in tasks)
+        {
+            task.taskData.taskCostTime -= 1;
+            if (task.taskData.taskCostTime <= 0&&task.taskState==playerTaskStateEnum.Completed)
+            {
+                AddCompletedTask(task);
+            }
+        }
+    }
+
     public void AssignTask(PlayerTaskView taskData, PlotView targetPlot)
     {
         PlayerTaskTypeEnum taskType =  taskData.taskData.taskType;
@@ -41,6 +91,7 @@ public class PlayerTaskSystem : SingletonBaseWithMono<PlayerTaskSystem>
             else
             {
                 player.AssignTask(taskData);//分配任务
+                AddTask(taskData);
             }
         }
 
