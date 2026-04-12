@@ -1,0 +1,22 @@
+.top_container {
+    background-color: rgba(135, 125, 125, 0.76);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    margin-right: 2px;
+    padding-right: 0;
+    margin-left: 2px;
+    flex-direction: row;
+    width: 100px;
+    justify-content: center;
+}
+
+.top_label_text {
+    -unity-font-style: bold;
+    width: auto;
+    font-size: 14px;
+    align-items: center;
+    align-self: auto;
+    -unity-text-align: upper-left;
+}
