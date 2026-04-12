@@ -5,58 +5,82 @@ using UnityEngine;
 public class PlotView : MonoBehaviour
 {
     // 产出
-    [field: SerializeField]public List<ProductionData> productions {get; private set;} = new(); // 地块产出列表
+    [field: SerializeField] public List<ProductionData> productions { get; private set; } = new();
 
     // 地块状态
-    public bool isDetected {get; private set;} = false; // 是否被探明 
+    public bool isDetected { get; private set; } = false;
+    public bool isSelected { get; private set; } = false;
+    [SerializeField] public bool canPassed { get; private set; } = true;
 
-    public bool isSelected {get; private set;} = false; // 是否被选中
-
-    [SerializeField] public bool canPassed {get; private set;} = true; // 是否能通行
-
-    public int x = -1; // 地块横坐标，从0开始计数
-    public int y = -1; // 地块纵坐标，从0开始计数
-    [field: SerializeField] public PlotTypeEnum plotType {get; private set;} = PlotTypeEnum.None; // 地块类型
+    public int x = -1;
+    public int y = -1;
+    [field: SerializeField] public PlotTypeEnum plotType { get; private set; } = PlotTypeEnum.None;
 
     // 改良
-    public List<ImprovementView> improvements = new(); // 已经建造的改良
+    public List<ImprovementView> improvements = new();
 
     // 怪物
-    public List<MonsterView> monsters = new(); // 地块怪物
+    public List<MonsterView> monsters = new();
 
     // 宝箱
-    public TreasureBoxView treasureBox = null; // 地块宝箱
+    public TreasureBoxView treasureBox = null;
 
     // 特殊奖励
-    public List<SpecialRewardView> specialRewards = new(); // 地块特殊奖励
+    public List<SpecialRewardView> specialRewards = new();
+
+    //Shader实现高亮
+    private Material mat;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        originalColor = GetComponent<SpriteRenderer>().color; // 存储原始颜色
+        // 获取SpriteRenderer（一次性）
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.LogError($"PlotView: {gameObject.name} 没有SpriteRenderer组件");
+            return;
+        }
+
+        // 创建材质实例副本，而不是共享原材质
+        mat = spriteRenderer.material;
+
+        // 初始化Shader状态为Normal(0)
+        if (mat != null)
+        {
+            mat.SetFloat("_State", 0);
+            // 验证_OutlineWidth是否被正确设置
+            Debug.Log($"PlotView({x},{y}) - OutlineWidth: {mat.GetFloat("_OutlineWidth")}");
+        }
+
+        // 注册事件监听
         EventCenter.Instance.AddListener<GameObject>("鼠标悬停", HighLightPlot);
         EventCenter.Instance.AddListener<GameObject>("左键点击", SelectPlot);
+        EventCenter.Instance.AddListener("取消选中", DeselectPlot); // 如果有这个事件
     }
 
-    /// <summary>
-    /// 计算产出的核心方法类
-    /// </summary>
+    void OnDestroy()
+    {
+        // 移除事件监听，避免内存泄漏
+        EventCenter.Instance.RemoveListener<GameObject>("鼠标悬停", HighLightPlot);
+        EventCenter.Instance.RemoveListener<GameObject>("左键点击", SelectPlot);
+        EventCenter.Instance.RemoveListener("取消选中", DeselectPlot);
+    }
+
     public TotalProductionData PlotProduct()
     {
         TotalProductionData totalProduction = new TotalProductionData(0, new List<ProductionData>());
 
-        // 加上地块的基础产出
         foreach (var production in productions)
         {
             totalProduction += new TotalProductionData(0, new List<ProductionData> { production });
         }
 
-        // 加上改良的额外产出
         foreach (var improvement in improvements)
         {
             totalProduction += improvement.ImprovementProduct();
         }
 
-        // 加上特殊奖励的额外产出
         foreach (var specialReward in specialRewards)
         {
             totalProduction += specialReward.ImprovementProduct();
@@ -66,41 +90,29 @@ public class PlotView : MonoBehaviour
 
     public void OnEventApplied(EventView eventView)
     {
-        // 处理事件触发逻辑
         eventView.ApplyEvent(this);
     }
 
     public void OnEventResolved(EventView eventView)
     {
-        // 处理事件解决逻辑
         eventView.ResolveEvent(this);
     }
 
     #region 高亮显示地块
-    //高亮显示地块参数
-    [Header("高亮显示地块的参数")]
-    public Color greenHighlightColor = new Color(0.2f, 1f, 0f, 0.5f);  // 绿色
-    public Color blueHighlightColor = new Color(0f, 0.8f, 1f, 1f);  // 蓝色
-    public float ChangeDuration = 0.2f;  // 高亮过渡持续时间
-    private Tween colorTween;  // 用于存储当前的颜色过渡
-    private Color originalColor;  // 存储原始颜色，方便恢复
 
     /// <summary>
-    /// 绿色高亮显示地块（鼠标悬停时）
+    /// 鼠标悬停时高亮（蓝色边框）
     /// </summary>
     public void HighLightPlot(GameObject plot)
     {
-        // 判断是否为地块
-        if (plot == null || plot.GetComponent<PlotView>() == null)
+        if(plot == null || plot.GetComponent<PlotView>()==null)
         {
             return;
         }
 
-        // 如果已经被选中，不需要绿色高亮，保持蓝色
+        // // 如果已经被选中，不需要绿色高亮，保持蓝色
         if (isSelected)
-        {
             return;
-        }
 
         if (plot != this.gameObject)
         {
@@ -108,78 +120,69 @@ public class PlotView : MonoBehaviour
             return;
         }
 
-        colorTween?.Kill();
 
-        SpriteRenderer spriteRenderer = plot.GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
+        if (mat == null)
         {
+            Debug.LogError($"Material 为 null：{gameObject.name}");
             return;
         }
-        //Debug.Log("高亮显示地块: " + plot.GetComponent<PlotView>().x + ", " + plot.GetComponent<PlotView>().y);
-        Color targetColor = greenHighlightColor;
-        colorTween = spriteRenderer.DOColor(targetColor, ChangeDuration).SetEase(Ease.OutQuad);
+
+        // 设置为Hover状态(1)
+        mat.SetFloat("_State", 1);
+        Debug.Log($"PlotView({x},{y}) - Hover State Activated");
     }
 
     /// <summary>
-    /// 恢复地块颜色到原始状态
+    /// 恢复到正常状态
     /// </summary>
     public void RestoreColor(GameObject plot)
     {
-        // 如果地块被选中了，不恢复颜色
+        // 如果已选中，不恢复
         if (isSelected)
-        {
             return;
-        }
 
-        if (plot == null || plot != this.gameObject)
+        if (plot != this.gameObject||plot==null)
         {
-            SpriteRenderer SR = GetComponent<SpriteRenderer>();
-            if (SR.color == originalColor)
-            {
+            if (mat == null)
                 return;
-            }
+            // 设置为Normal状态(0)
+            mat.SetFloat("_State", 0);
+            Debug.Log($"PlotView({x},{y}) - Normal State Restored");
 
-            colorTween?.Kill();
-
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null)
-            {
-                return;
-            }
-
-            colorTween = spriteRenderer.DOColor(originalColor, ChangeDuration).SetEase(Ease.OutQuad);
         }
+
+       
     }
 
     /// <summary>
-    /// 蓝色高亮显示地块，表示选中状态（点击时）
+    /// 点击选中地块（绿色边框+填充）
     /// </summary>
     public void SelectPlot(GameObject plot)
     {
         // 判断是否为地块
         if (plot == null || plot.GetComponent<PlotView>() == null)
-        {
             return;
-        }
 
+        // 如果点击的是其他地块，取消其选中状态
         if (plot != this.gameObject)
         {
             isSelected = false;
-            RestoreColor(plot);
+            RestoreColor(this.gameObject);
             return;
         }
 
+        // 点击自己，标记为选中
         isSelected = true;
-        colorTween?.Kill();
 
-        SpriteRenderer spriteRenderer = plot.GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
+        if (mat == null)
         {
+            Debug.LogError($"Material 为 null：{gameObject.name}");
             return;
         }
 
-        Color targetColor = blueHighlightColor;
-        colorTween = spriteRenderer.DOColor(targetColor, ChangeDuration).SetEase(Ease.OutQuad);
+        // 设置为Valid状态(2) - 绿色边框
+        mat.SetFloat("_State", 2);
+        Debug.Log($"PlotView({x},{y}) - Selected (Valid State)");
     }
 
     /// <summary>
@@ -189,12 +192,8 @@ public class PlotView : MonoBehaviour
     {
         isSelected = false;
         RestoreColor(this.gameObject);
+        Debug.Log($"PlotView({x},{y}) - Deselected");
     }
-    #endregion
-
-
-
-    #region 地块被选中时显示信息面板
 
     #endregion
 }
